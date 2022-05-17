@@ -68,32 +68,32 @@ On-chain技術で解決する為の実験ネットワークである．P2Pネッ
 冪分布に従う傾向を確認した．
 以上より，STNにおいても優先権付き待ち行列理論による考察が有効であると
 考えられる．
-(Tantative) 
- Bitcoin Scaling Test Network (STN) is an experimental network to solve the 
-scalability problem of Bitcoin by using on-chain technology. 
- A large number of transactions are constantly sent over the P2P network, 
-and miners generate huge blocks.
-In this study, we estimated the occupancy rate of transaction processing 
-and the fork probability of the blockchain by constructing STN nodes. 
- As a result, the estimated occupancy rate was about 1.04 and the estimated 
-fork probability was 8.5\%.
- In addition, we experimentally evaluated the transaction processing 
-performance by transferring many transactions containing the OP\_RETURN 
-script once per minute for one week. As a result, the transaction processing 
-probability was 98\%, and the latency distribution for transaction processing 
-tends to follow a power distribution in the long period.
-These results suggest that the priority queueing theory is also effective 
-for STN.
 }
 
 
 \section{Introduction}
 \label{sec:intro}
 
+ブロックチェーンは1990年代にHaberとStornettaによって発表された電子書類の
+分散タイムスタンプ・サービスに関する理論研究に起源がある
+\cite{HS1991,BHS1993,HS1997}．
+当時はインターネットが十分に発達しておらず，提案システムの実環境での利用
+は困難であった．
+2008年にビットコイン\cite{nakamoto}が登場する頃には実環境が整っており，
+翌2009年1月3日には提案システムが実装され，稼働も始まった．
+これ以降，ビットコインは稼働し続けている．このビットコインの実績と共に，
+分散タイムスタンプ・サービスと本質的に同じ技術がブロックチェーン
+(Blockchain, BC)という言葉に変わり，注目を集めるようになった．
 
-ビットコイン\cite{nakamoto}は2008年にP2P電子貨幣システムとして
-提案され，翌2009年1月3日に創始ブロックが生成されて以来，利用さ
-れ続けている．
+ビットコインによって誕生した新アイデアは，BCではなく，
+仲基合意(Nakamoto Consensus)と呼ばれるネットワークに参加する不特定多数の
+ノードがBCについて合意形成を行う仕組みにあった．
+合意形成によって同じ状態を持ち合う技術は，ビットコインの登場以前から知ら
+れていたが，仲基合意は作業証明(Proof of Work, PoW)\cite{DN1993,JJ1999}，
+最長チェーン規則，インセンティブ機構といった複数の仕組みを組み合わせる
+ことにより，インターネット規模での不特定多数のノード間で合意形成が可能な
+仕組みを生み出した点で斬新であった．
+
 Bitcoinの本質的に新しい利用価値は，取引にかかる手数料を極度に
 安くする事によって実現できる(1円や1セント以下の)超少額決済 
 (Micropayment) にある．このことによってインターネット上の様々
@@ -102,11 +102,9 @@ Bitcoinの本質的に新しい利用価値は，取引にかかる手数料を�
 サービス運営の為のコストを回収することが可能となる．
 つまり超少額決済は，これまでにない新しい分散型経済の仕組みを
 作ることができる潜在能力を持っている．
-
-一方，ビットコインやブロックチェーン(BC)を用いたビジネスは
-新しい分散経済の仕組みを構築する方向には全く進化していない．
-Bitcoin Core (BTC) \cite{btc} は電子貨幣システムではなく，
-投機目的の価値の貯蔵システムと化してしまった．
+しかし，現時点でBitcoin Core (BTC) \cite{btc} は電子貨幣システム
+として普段の支払いに利用されるわけではなく，投機目的の価値の貯蔵
+システムと化してしまった．
 その背景には，現状のビットコインでは多数の超少額決済の実行が
 事実上困難であるという理由がある．
 
@@ -135,6 +133,7 @@ P2Pネットワーク全体に行き渡る前に別のブロックが生成さ�
 これらの理由により，単位時間あたりの取引処理性能を向上すること
 には技術的な困難がある．この技術的な課題のことをスケーラビリティ
 問題と呼ぶ．
+
 
 ビットコインのスケーラビリティ問題を解決する方法も様々なものが
 提案されている\cite{ZHZB2020}．
@@ -216,13 +215,6 @@ bloXroute\cite{bloX}は，Blockchain Distribution Network (BDN)
 
 
 
-
-
-
-
-
-
-
 \section{Related Works}
 \label{sec:rworks}
 
@@ -246,10 +238,9 @@ bloXroute\cite{bloX}は，Blockchain Distribution Network (BDN)
 された時にBCが分岐してしまう．従って，ビットコインのBCが分岐する
 確率は以下のように計算できる．
 %
-\begin{eqnarray}
-  F(\tau_{fork}) &=& P(T \le \tau_{fork}) = 1 - e^{-\lambda \tau_{fork}} = 1 - e^{-12/600} \nonumber \\ 
-		 &\fallingdotseq& 0.02. 
-\end{eqnarray}
+\begin{equation}
+  F(\tau_{fork}) = P(T \le \tau_{fork}) = 1 - e^{-\lambda \tau_{fork}} \fallingdotseq \lambda \tau_{fork} = 12/600 = 0.02. 
+\end{equation}
 %
 以上より，BTCのBCの分岐確率は約2\%であることが分かる．
 
@@ -287,9 +278,6 @@ $\mu$は平均サービス率である．
 
 
 
-
-
-
 \section{Bitcoin Scaling Test Network}
 \label{sec:stn}
 
@@ -303,36 +291,17 @@ Testnetでは取引数が少ない為，ブロックサイズは小さい傾向�
 STNの未確認（=BCに取り込まれていない）取引件数の時間変化を
 図\ref{fig:unconfirmed_tx}に示す．
 %
-\begin{figure}[tb]
-  \vspace{-20mm}
+\begin{figure}[t]
+  \vspace{-45mm}
   \begin{center}
     \includegraphics[width=85mm]{time_vs_tx-plot.eps}
   \end{center}
-  \vspace{20mm}
+  \vspace{45mm}
   \caption{STNの未確認取引件数の時間変化}
   \label{fig:unconfirmed_tx}
   %  \ecaption{english caption is here}
 \end{figure}
 %
-% TODO: check the format later
-% ||
-% \/
-%\begin{figure}[t]
-%\sidecaption[t]
-%% Use the relevant command for your figure-insertion program
-%% to insert the figure file.
-%% For example, with the option graphics use
-%\includegraphics[scale=.65]{figure}
-%%
-%% If no graphics program available, insert a blank space i.e. use
-%%\picplace{5cm}{2cm} % Give the correct figure height and width in cm
-%%
-%%\caption{Please write your figure caption here}
-%\caption{If the width of the figure is less than 7.8 cm use the \texttt{sidecapion} command to flush the caption on the left side of the page. If the figure is positioned at the top of the page, align the sidecaption with the top of the figure -- to achieve this you simply need to use the optional argument \texttt{[t]} with the \texttt{sidecaption} command}
-%\label{fig:2}       % Give a unique label
-%\end{figure}
-
-
 
 
 
@@ -362,12 +331,12 @@ BCの再編成が行われたことが記録されている．
 になっている．ブロック採掘の難易度の時間変化を
 図\ref{fig:difficulty}に示す．
 %
-\begin{figure}[tb]
-  \vspace{-20mm}
+\begin{figure}[t]
+  \vspace{-45mm}
   \begin{center}
     \includegraphics[width=85mm]{time_vs_difficulty-plot.eps}
   \end{center}
-  \vspace{20mm}
+  \vspace{45mm}
   \caption{ブロック採掘の難易度の時間変化}
   \label{fig:difficulty}
   %  \ecaption{english caption is here}
@@ -380,13 +349,13 @@ STNでは最大ブロックサイズが10GBになるように設定すること�
 ことが推奨されている．これまでに採掘されたブロックのサイズ分布を
 調べた結果を図\ref{fig:block_size}に示す．
 %
-\begin{figure}[tb]
-  \vspace{-20mm}
+\begin{figure}[t]
+  \vspace{-45mm}
   \begin{center}
     \includegraphics[width=85mm]{bsv_stn-block_bytes-semilogy2.eps}
     \includegraphics[width=85mm]{bsv_mainnet-block_bytes-loglog.eps}
   \end{center}
-  \vspace{20mm}
+  \vspace{45mm}
   \caption{Bitcoin SVにおけるブロックサイズ分布（上図はSTN，下図はMainnet）}
   \label{fig:block_size}
   %  \ecaption{english caption is here}
@@ -407,18 +376,30 @@ BSVは採掘者の評判を評価する観点から採掘したブロックに�
 することを推奨している．この採掘者IDを参考にしてブロック採掘頻度の
 ランキングを計算した結果を図\ref{fig:minerrank}に示す．
 %
-\begin{figure}[tb]
-  \vspace{-20mm}
+\begin{figure}[t]
+  \vspace{-45mm}
   \begin{center}
     \includegraphics[width=85mm]{bsv_stn-block_miners-ranking-loglog.eps}
-    \includegraphics[width=85mm]{bsv_mainnet-block_miners-ranking-loglog.eps}
   \end{center}
-  \vspace{20mm}
-  \caption{採掘者IDを参考にして計算したブロック採掘頻度ランキング（上図はSTN，下図はMainnet）}
+  \vspace{45mm}
+  \caption{採掘者IDを参考にして計算したブロック採掘頻度ランキング（STN）}
   \label{fig:minerrank}
   %  \ecaption{english caption is here}
 \end{figure}
 %
+%
+\begin{figure}[t]
+  %\vspace{-45mm}
+  \begin{center}
+    \includegraphics[width=85mm]{bsv_mainnet-block_miners-ranking-loglog.eps}
+  \end{center}
+  %\vspace{45mm}
+  \caption{採掘者IDを参考にして計算したブロック採掘頻度ランキング（Mainnet）}
+  \label{fig:minerrank}
+  %  \ecaption{english caption is here}
+\end{figure}
+%
+
 こちらはSTNとMainnetの両方とも冪分布に従っていることが確認できる．
 
 
@@ -431,12 +412,8 @@ BSVは採掘者の評判を評価する観点から採掘したブロックに�
 \label{sec:experiments}
 
 
-\url{https://github.com/cit-fujihalab/stn_experiments}
-
-
-
-\subsection{Experiment 1: }
-
+\subsection{Experiment 1: STNの稼働率}
+\label{sec:occupancyrate}
 
 図\ref{fig:unconfirmed_tx}における未確認取引件数の時間変化から，
 STNの稼働率を推定した．
@@ -444,11 +421,11 @@ STNの稼働率を推定した．
 を計算した結果を図\ref{fig:occupancyrate}に示す．
 %
 \begin{figure}[tb]
-  \vspace{-20mm}
+  \vspace{-45mm}
   \begin{center}
     \includegraphics[width=85mm]{bsv_stn-rho-queue_occupancy_rate.eps}
   \end{center}
-  \vspace{20mm}
+  \vspace{45mm}
   \caption{STNの推定稼働率$\tilde{\rho}$の時間変化}
   \label{fig:occupancyrate}
   %  \ecaption{english caption is here}
@@ -464,8 +441,12 @@ BCに取り込まれない取引が出現していると考えられる．
 
 
 
-\subsection{Experiment 2: }
 
+
+
+
+\subsection{Experiment 2: BCの分岐確率の推定}
+\label{sec:sork}
 
 STNのノードを構築してP2Pネットワークに接続すると分かるが，大きなブロック
 が生成されたと思われるタイミングでBCの大きな分岐が起きてSafe modeとなり，
@@ -498,8 +479,13 @@ $t=\tau_{fork} \fallingdotseq 53$秒となることから，STNにおける平�
 
 
 
-\subsection{Experiment 3: }
 
+
+
+
+
+\subsection{Experiment 3: 取引処理性能の評価実験}
+\label{sec:method}
 
 常に沢山の取引がTransaction poolにある状況で，取引がBCに取り込まれる
 までにどの程度の時間がかかるかを実験により性能評価した．
@@ -522,11 +508,11 @@ $t=\tau_{fork} \fallingdotseq 53$秒となることから，STNにおける平�
 図\ref{fig:exp3-1}に示す．
 %
 \begin{figure}[tb]
-  \vspace{-20mm}
+  %\vspace{-45mm}
   \begin{center}
     \includegraphics[width=85mm]{exp3-1.eps}
   \end{center}
-  \vspace{20mm}
+  %\vspace{45mm}
   \caption{経過時間と取引が取り込まれたブロック番号の対応関係}
   \label{fig:exp3-1}
   %  \ecaption{english caption is here}
@@ -547,12 +533,12 @@ $1-1/\tilde{\rho} \fallingdotseq 0.0387$の確率でBCに取り込まれない
 次に取引送信からBCに取り込まれるまでにかかる時間のヒストグラムを
 図\ref{fig:exp3-2}に示す．
 %
-\begin{figure}[tb]
-  \vspace{-20mm}
+\begin{figure}[t]
+  %\vspace{-45mm}
   \begin{center}
     \includegraphics[width=85mm]{exp3-2.eps}
   \end{center}
-  \vspace{20mm}
+  %\vspace{45mm}
   \caption{取引送信からBCに取り込まれるまでにかかる時間のヒストグラム}
   \label{fig:exp3-2}
   %  \ecaption{english caption is here}
@@ -571,12 +557,12 @@ BCに取り込まれる時間は指数分布に従うが，1週間程度の長�
 取引サイズに対する取引手数料の割合と取引がBCに取り込まれるまでに
 かかった時間の関係を図\ref{fig:exp3-3}に示す．
 %
-\begin{figure}[tb]
-  \vspace{-20mm}
+\begin{figure}[t]
+  %\vspace{-45mm}
   \begin{center}
     \includegraphics[width=85mm]{exp3-3.eps}
   \end{center}
-  \vspace{20mm}
+  %\vspace{45mm}
   \caption{取引サイズに対する取引手数料の割合と取引がBCに取り込まれるまでにかかった時間の関係}
   \label{fig:exp3-3}
   %  \ecaption{english caption is here}
@@ -593,8 +579,8 @@ BCに取り込まれる時間は指数分布に従うが，1週間程度の長�
 
 
 
-\section{Discussion}
-\label{sec:discussion}
+%\section{Discussion}
+%\label{sec:discussion}
 
 
 
@@ -626,7 +612,7 @@ OP\_RETURNスクリプトを含む取引を1分に1回の高頻度で1週間の�
 \begin{acknowledgement}
  This work was partially supported by the Japan Society for the Promotion of 
 Science (JSPS) through KAKENHI (Grants-in-Aid for Scientific Research) Grant 
-Numbers 17H01742 and 20K11797. 
+Number 20K11797. 
 \end{acknowledgement}
 
 
@@ -644,6 +630,54 @@ Numbers 17H01742 and 20K11797.
 
 
 \begin{thebibliography}{99}
+
+% Blockchain
+\bibitem{HS1991}
+  S. Haber and W. S. Stornetta, 
+  ``How To Time-Stamp a Digital Document,''
+  J. Cryptology, 3, 99-111 (1991)
+  %\url{https://link.springer.com/content/pdf/10.1007\%2FBF00196791.pdf}
+
+\bibitem{BHS1993}
+  D. Bayer, S. Haber, and W. S. Stornetta,
+  ``Improving the Efficiency and Reliability of Digital Time-Stamping,''
+  Sequences II: Methods in Communication, Security, and Computer Sicence, 
+  pp. 329-334 (1993).
+
+\bibitem{HS1997}
+  S. Haber and W. S. Stornetta, 
+  ``Secure Names for Bit-Strings,''
+  CCS'97: Proceedings of the 4th ACM conference on Computer and 
+  communications security, pp. 28-35 (1997).
+  %\url{https://nakamotoinstitute.org/static/docs/secure-names-bit-strings.pdf}
+
+
+% Proof of Work
+\bibitem{DN1993}
+  C. Dwork and M. Naor, 
+  ``Pricing via Processing or Combatting Junk Mail,''
+  Advances in Cryptology (CRYPTO'92), 
+  Lecture Notes in Computer Science, vol. 740, Springer (1993). 
+  %\url{https://web.cs.dal.ca/~abrodsky/7301/readings/DwNa93.pdf}
+
+
+\bibitem{JJ1999}
+  M. Jakobsson and A. Juels, 
+  ``Proofs of Work and Bread Pudding Protocols (Extended Abstract),''
+  In: Preneel B. (eds) Secure Information Networks, 
+  The International Federation for Information Processing, 
+  vol 23, Springer (1999).
+  %\url{https://www.arijuels.com/wp-content/uploads/2013/09/PoW.pdf}
+
+
+% scalability problem
+\bibitem{ZHZB2020}
+  Q. Zhou, \textit{et al.}, 
+  ``Solutions to Scalability of Blockchain: A Survey''
+  IEEE Access, Vol. 8, pp.16440-16455, IEEE, 2020. 
+
+
+
 
 % Bitcoin
 \bibitem{nakamoto}
@@ -714,44 +748,57 @@ Numbers 17H01742 and 20K11797.
   U. Klarman, \textit{et al.},
   ``bloXroute: A Scalable Trustless Blockchain Distribution Network''
   (White paper), 2018.
-  \url{https://bloxroute.com/wp-content/uploads/2018/03/blo}\\
-  \url{Xroute-whitepaper.pdf}
-  (2021年2月9日閲覧確認)
+  \url{https://bloxroute.com/wp-content/uploads/2018/03/bloXroute-whitepaper.pdf}
 
 
 \bibitem{bsv}
   Bitcoin SV (Satoshi Vision) 
-  \url{https://github.com/bitcoin-}\\
-  \url{sv/bitcoin-sv}
-  (2021年2月9日閲覧確認)
+  \url{https://github.com/bitcoin-sv/bitcoin-sv}
 
 \bibitem{bitcoinscaling}
   Bitcoin Scaling Test Network
   \url{https://bitcoinscaling.io/}
-  (2021年2月9日閲覧確認)
 
 
-%\bibitem{fujihara2019}
-%  A. Fujihara，
-%  ``PoWaP: Proof of Work at Proximity for a crowdsensing system for 
-%  collaborative traffic information gathering,'' 
-%  Internet of Things, 100046, Elsevier (2019).
-%  \url{https://www.sciencedirect.com/science/article/pii/S254266051830177X}
-%
-%\bibitem{Fujihara2018}
-%  A. Fujihara,
-%  ``Proposing a System for Collaborative Traffic Information Gathering and 
-%  Sharing Incentivized by Blockchain Technology,''
-%  The 10th International Conference on Intelligent Networking and 
-%  Collaborative Systems (INCoS-2018), pp.170-182 (2018)
-%  \url{https://link.springer.com/chapter/10.1007/978-3-319-98557-2_16}
-%
-%\bibitem{YF2020}
-%  T. Yanagihara and A. Fujihara,
-%  ``Experimental performance evaluation of cross-referencing method for 
-%    multiple blockchains,'' 
-%  IEICE Technical Report IN2019-129, pp.363-368 (2020)
-%  \url{https://www.ieice.org/ken/paper/2020030611wm/eng/} (Japanese)
+\bibitem{Fujihara2018}
+  A. Fujihara,
+  ``Proposing a System for Collaborative Traffic Information Gathering and 
+  Sharing Incentivized by Blockchain Technology,''
+  The 10th International Conference on Intelligent Networking and 
+  Collaborative Systems (INCoS-2018), pp.170-182 (2018)
+  \url{https://link.springer.com/chapter/10.1007/978-3-319-98557-2_16}
+
+\bibitem{Fujihara2019}
+  A. Fujihara，
+  ``PoWaP: Proof of Work at Proximity for a crowdsensing system for 
+  collaborative traffic information gathering,'' 
+  Internet of Things, 100046, Elsevier (2019).
+  \url{https://www.sciencedirect.com/science/article/pii/S254266051830177X}
+
+\bibitem{Fujihara2020}
+  A. Fujihara, 
+  ``Proposing a Blockchain-Based Open Data Platform and Its Decentralized Oracle,''
+  Advances in Intelligent Networking and Collaborative Systems (INCoS2019), 
+  Advances in Intelligent Systems and Computing, 
+  Vol. 1035, pp. 190--201, Springer (2020).
+  \url{https://link.springer.com/chapter/10.1007/978-3-030-29035-1_19}
+
+
+\bibitem{YF2021a}
+  T. Yanagihara and A. Fujihara, 
+  ``Considering Cross-Referencing Method for Scalable Public Blockchain,''
+  Advances in Internet, Data and Web Technologies, 
+  Lecture Notes on Data Engineering and Communications Technologies, 
+  Vol. 65, pp. 220-231, Springer (2021). 
+  \url{https://link.springer.com/chapter/10.1007/978-3-030-70639-5_21}
+
+
+\bibitem{YF2021b}
+  T. Yanagihara and A. Fujihara,
+  ``Cross-Referencing Method for Scalable Public Blockchain,''
+  Internet of Things, Vol. 15, 100419 (2021). 
+  \url{https://www.sciencedirect.com/science/article/pii/S2542660521000639}
+
 
 
 \bibitem{OB2005}
@@ -769,7 +816,6 @@ Numbers 17H01742 and 20K11797.
 \bibitem{woc}
   WhatsOnChain.com, BSV Explorer - STN,
   \url{https://stn.whatsonchain.com/}
-  (2021年2月9日閲覧確認)
 
 
 
@@ -777,7 +823,6 @@ Numbers 17H01742 and 20K11797.
 \bibitem{flightradar24}
   Flight Tracker | Flightradar24 | Track Planes in Real-time,
   \url{https://www.flightradar24.com/}
-  (2021年2月9日閲覧確認)
 
 
 
