@@ -56,7 +56,7 @@
 \maketitle
 
 \abstract{
-The Bitcoin SV Scaling Test Network (STN) is an experimental network for solving the scalability problem of Bitcoin with On-chain technology.
+The Bitcoin SV Scaling Test Network (STN) is an experimental network for solving the scalability problem of Bitcoin with on-chain technology.
 A large amount of transactions are always transmitted on P2P networks, and experiments are conducted to generate huge blocks.
 In this study, by constructing the STN node, the occupancy rate of transaction processing and the branch probability of the blockchain are estimated. 
 As a result, the estimated occupancy rate was about 1.04 and the estimated branch probability was 8.5\%.
@@ -69,29 +69,40 @@ From the above, the consideration by the queueing theory with priority seems to 
 
 \section{Introduction}
 \label{sec:intro}
+%ブロックチェーンは1990年代にHaberとStornettaによって発表された電子書類の分散タイムスタンプ・サービスに関する理論研究に起源がある
+The origin of blockchain is a theoretical study on distributed timestamp services for electronic documents by Haber and Stornetta in the early 1990s
+\cite{HS1991,BHS1993,HS1997}.
+%当時はインターネットが十分に発達しておらず，提案システムの実環境での利用は困難であった．
+At that time, the Internet was insufficiently developed, and it was difficult to use the proposed system in a real environment.
+%2008年にビットコイン\cite{nakamoto}が登場する頃には実環境が整っており，翌2009年1月3日には提案システムの稼働も始まった．
+However, the real environment was prepared by the time that Bitcoin \cite{nakamoto} appeared in 2008, and the operation of the peer-to-peer eletronic cash system started on January 3, 2009.
+%これ以降，ビットコインは稼働し続けている．
+Since then, the system has never stopped working. 
+%このビットコインの実績と共に，分散タイムスタンプ・サービスと本質的に同じ技術がBlockchain(以下，BCと省略)という言葉に変わり，注目を集めるようになった．
+As a result of this achievement by Bitcoin, the word ``Blockchain'' (Hereinafter abbreviated as BC) was born and it has attracted attention though it is essentially the same technology as the distributed time stamp services.
+%ビットコインによって誕生した新アイデアは，BCではなく，Nakamoto Consensus(仲基合意)と呼ばれる，ネットワークに参加する不特定多数のノードがBCについて合意形成を行う仕組みにあった．
+Therefore, the new idea created by Bitcoin was not BC, but Nakamoto Consensus (仲基合意), where an unspecified number of nodes participating in the network form a consensus on BC. 
+%合意形成によって同じ状態を持ち合う技術は，ビットコインの登場以前から知られていたが，Nakamoto ConsensusはProof of Work(PoW)\cite{DN1993,JJ1999}，最長チェーン規則，インセンティブ機構といった複数の仕組みを組み合わせることにより，インターネット規模での不特定多数のノード間で合意形成が可能な仕組みを生み出した点で斬新であった．
+Although research on consensus algorithms had been conducted before the advent of Bitcoin, Nakamoto Consensus was innovative in that it proposed a method to form consensus among unspecified number of nodes on the Internet scale by combining multiple mechanisms such as Proof of Work (PoW)\cite{DN1993,JJ1999}, longest-chain rule, and incentive mechanism.
 
-ブロックチェーンは1990年代にHaberとStornettaによって発表された電子書類の分散タイムスタンプ・サービスに関する理論研究に起源がある
-\cite{HS1991,BHS1993,HS1997}．
-当時はインターネットが十分に発達しておらず，提案システムの実環境での利用は困難であった．
-2008年にビットコイン\cite{nakamoto}が登場する頃には実環境が整っており，翌2009年1月3日には提案システムの稼働も始まった．
-これ以降，ビットコインは稼働し続けている．
-このビットコインの実績と共に，分散タイムスタンプ・サービスと本質的に同じ技術がブロックチェーン
-(Blockchain, BC)という言葉に変わり，注目を集めるようになった．
+%Bitcoinの本質的に新しい利用価値は，取引にかかる手数料を極度に安くする事によって実現できる，1円や1セント以下のMicropaymentにある．
+The innovative use value of Bitcoin is in micropayments of less than one yen or cent that can be realized by making transaction fees extremely low. 
+%Micropaymentはインターネット上の様々なサービスを利用した時に，ほぼ0に近い(人々が支払いを気にしないレベルの)課金を沢山の利用者から集めることを可能にする．
+Micropayment makes it possible to collect near zero (the level at which people don't care about paying) charges from a large number of users when using various services on the Internet.
+%従ってMicropaymentは，これまでにない新しい分散型経済の仕組みを作ることを可能にする潜在能力を持っている．
+Micropayments therefore have the potential to create new decentralized economic mechanisms that have never existed before.
+%しかし，現状のBitcoin Core (BTC) \cite{btc} は電子貨幣システムとして普段の支払いに利用されるわけではなく，投機目的の価値の貯蔵システムと化してしまっている．
+However, the current Bitcoin Core (BTC) \cite{btc} is not used for ordinary payments as an electronic money system, but has become a store-of-value system for speculative purposes. 
+%この背景には，多数の超少額決済の実行を事実上困難にしている技術的な課題が存在する．
+Behind this, there is a technical issue that make BTC practically difficult to perform many micropayments. 
 
-ビットコインによって誕生した新アイデアは，BCではなく，Nakamoto Consensusと呼ばれる，ネットワークに参加する不特定多数のノードがBCについて合意形成を行う仕組みにあった．
-合意形成によって同じ状態を持ち合う技術は，ビットコインの登場以前から知られていたが，仲基合意は作業証明(Proof of Work, PoW)\cite{DN1993,JJ1999}，最長チェーン規則，インセンティブ機構といった複数の仕組みを組み合わせることにより，インターネット規模での不特定多数のノード間で合意形成が可能な仕組みを生み出した点で斬新であった．
-
-Bitcoinの本質的に新しい利用価値は，取引にかかる手数料を極度に安くする事によって実現できる，1円や1セント以下のMicropaymentにある．
-このことによってインターネット上の様々なサービスの利用時に，ほぼ0に近い(人々が支払いを行ったことを気にしないレベルの)課金を沢山のユーザから集めることができる．
-つまり超少額決済は，これまでにない新しい分散型経済の仕組みを作ることができる潜在能力を持っている．
-しかし，現時点でBitcoin Core (BTC) \cite{btc} は電子貨幣システムとして普段の支払いに利用されるわけではなく，投機目的の価値の貯蔵システムと化してしまった．
-その背景には，現状のビットコインでは多数の超少額決済の実行が事実上困難であるという理由がある．
-
-BTCのブロックサイズの上限は1MBに決まっている．
-これより大きなサイズのブロックは不当なものとみなされ，マイナーに拒否される．
-またビットコインの平均ブロック生成時間は10分になるように難易度調整アルゴリズムによって制御されている．
-従って，平均10分に1MB以下のブロックに取り込めるだけの取引しか処理することができない．
-これは1秒あたり5〜7取引しか処理できない計算になる．
+%BTCのブロックサイズの上限は1MBに決まっており，これより大きなサイズのブロックはマイナーに拒否される．
+The block size limit for BTC is 1 MB, and blocks larger than this are rejected by miners. 
+%またビットコインの平均ブロック生成時間は10分になるように難易度調整アルゴリズムによって制御されている．
+The average block generation time for BTC is controlled by a difficulty adjustment algorithm to ten minutes. 
+%従って，平均10分に1MB以下のブロックに取り込めるだけの取引しか処理することができない．
+%これは1秒あたり5〜7取引しか処理できない計算になる．
+Therefore, the system can only approve transactions that can be recorded in a block of 1 MB at maximum every ten minutes on average, which is 5-7 transactions per second. 
 単純に平均ブロック生成時間を10分より短くしたり，ブロックサイズの上限を1MBより大きくすれば，この問題が解決するように思われる．
 しかし，ブロックサイズを大きくすると，ブロックをP2Pネットワーク上の全ノードに転送して共有する過程により時間がかかってしまう．
 従って，平均ブロック生成時間を10分より長くしないとブロックがP2Pネットワーク全体に行き渡る前に別のブロックが生成される確率が上がる．
@@ -115,12 +126,11 @@ Off-chain技術は一見良いように見えるが，個々の取引処理がBC
 しかし，近年これらのマーケットの支配人や利用者が逮捕される事例が数多く報告されている
 \cite{silkroad,alphabay,welcome2video}．
 これらの逮捕はビットコインが全取引を改ざん耐性を持たせて公開している為に，法的な証拠として利用可能であることに起因する．
-この観点から考えると，Off-chain技術が普及するほど，政府等が追跡して監査することが不可能な取引が増えてしまい，ダークネット・マーケットにおける違法な取引の取り締まりが難しくなったり，マネー
-ロンダリングの温床となりうる．
+この観点から考えると，Off-chain技術が普及するほど，政府等が追跡して監査することが不可能な取引が増えてしまい，ダークネット・マーケットにおける違法な取引の取り締まりが難しくなったり，マネーロンダリングの温床となりうる．
 法と倫理とのバランスを考えた時，究極的にはBC上で全取引を処理するOn-chain技術によってスケーラビリティ問題を解決することが求められる．
 
 On-chainでスケーラビリティ問題を解決する為には，BCが分岐しないようにうまく制御しながら平均ブロック生成時間を短くするか，ブロックサイズを大きくする必要がある．
-bloXroute\cite{bloX}は，Blockchain Distribution Network (BDN)という名称の，より大きなブロックをより短時間で伝搬させることが可能なネットワーク層をP2Pネットワークに接続することで，ブロック伝搬速度を改善しようとする提案である．
+bloXroute\cite{bloX}は，Blockchain Distribution Networkという名称の，より大きなブロックをより短時間で伝搬させることが可能なネットワーク層をP2Pネットワークに接続することで，ブロック伝搬速度を改善しようとする提案である．
 
 ブロックサイズを拡大する取り組みはBitcoin SV (BSV) \cite{bsv} Scaling Test Network (STN)で実験的な取り組みが行われている\cite{bitcoinscaling}．
 上述の通り，BTCのブロックサイズの上限は1MBであるのに対し，BSVではブロックサイズの上限を撤廃した．
@@ -448,11 +458,8 @@ Number 20K11797.
 %\addcontentsline{toc}{section}{Appendix}
 %%
 %%
-%When placed at the end of a chapter or contribution (as opposed to at the end of the book), the numbering of tables, figures, and equations in the appendix section continues on from that in the main text. Hence please \textit{do not} use the \verb|appendix| command when writing an appendix at the end of your chapter or contribution. If there is only one the appendix is designated ``Appendix'', or ``Appendix 1'', or ``Appendix 2'', etc. if there is more than one.
-%
-%\begin{equation}
-%a \times b = c
-%\end{equation}
+
+
 
 
 \begin{thebibliography}{99}
@@ -478,6 +485,15 @@ Number 20K11797.
   %\url{https://nakamotoinstitute.org/static/docs/secure-names-bit-strings.pdf}
 
 
+% Bitcoin
+\bibitem{nakamoto}
+  S. Nakamoto, 
+  ``Bitcoin: A Peer-to-Peer Electronic Cash System''
+  (White paper), 2008 
+  \url{https://bitcoin.org/bitcoin.pdf}
+  \url{https://www.bitcoinsv.io/bitcoin.pdf}
+
+
 % Proof of Work
 \bibitem{DN1993}
   C. Dwork and M. Naor, 
@@ -496,25 +512,16 @@ Number 20K11797.
   %\url{https://www.arijuels.com/wp-content/uploads/2013/09/PoW.pdf}
 
 
+\bibitem{btc}
+  Bitcoin Core 
+  \url{https://github.com/bitcoin/bitcoin}
+
+
 % scalability problem
 \bibitem{ZHZB2020}
   Q. Zhou, \textit{et al.}, 
   ``Solutions to Scalability of Blockchain: A Survey''
   IEEE Access, Vol. 8, pp.16440-16455, IEEE, 2020. 
-
-
-
-
-% Bitcoin
-\bibitem{nakamoto}
-  S. Nakamoto, 
-  ``Bitcoin: A Peer-to-Peer Electronic Cash System''
-  (White paper), 2008 
-
-
-\bibitem{btc}
-  Bitcoin Core 
-  \url{https://github.com/bitcoin/bitcoin}
 
 
 \bibitem{Fujihara2018}
@@ -524,7 +531,6 @@ Number 20K11797.
   The 10th International Conference on Intelligent Networking and 
   Collaborative Systems (INCoS-2018), pp.170-182 (2018)
   \url{https://link.springer.com/chapter/10.1007/978-3-319-98557-2_16}
-
 
 \bibitem{Fujihara2019}
   A. Fujihara，
@@ -541,7 +547,6 @@ Number 20K11797.
   Vol. 1035, pp. 190--201, Springer (2020).
   \url{https://link.springer.com/chapter/10.1007/978-3-030-29035-1_19}
 
-
 \bibitem{YF2021a}
   T. Yanagihara and A. Fujihara, 
   ``Considering Cross-Referencing Method for Scalable Public Blockchain,''
@@ -550,15 +555,11 @@ Number 20K11797.
   Vol. 65, pp. 220-231, Springer (2021). 
   \url{https://link.springer.com/chapter/10.1007/978-3-030-70639-5_21}
 
-
 \bibitem{YF2021b}
   T. Yanagihara and A. Fujihara,
   ``Cross-Referencing Method for Scalable Public Blockchain,''
   Internet of Things, Vol. 15, 100419 (2021). 
   \url{https://www.sciencedirect.com/science/article/pii/S2542660521000639}
-
-
-
 
 
 \bibitem{PD2016}
