@@ -86,39 +86,22 @@ However, the current Bitcoin Core (BTC) \cite{btc} is not used for ordinary paym
 Behind this, there is a technical issue that make BTC practically difficult to perform many micropayments. 
 
 
-The block size limit for BTC is 1 MB, and blocks larger than this are rejected by miners. 
-The average block generation time for BTC is controlled by a difficulty adjustment algorithm to ten minutes. 
-Therefore, the system can only approve transactions that can be recorded in a block of 1 MB at maximum every ten minutes on average, which is 5-7 transactions per second. 
-%単純に平均ブロック生成時間を10分より短くしたり，ブロックサイズの上限を1MBより大きくすれば，この問題が解決するように思われる．
-Simply reducing the average block generation time to less than 10 minutes or increasing the upper limit of the block size to more than 1 MB seems to solve this problem.
-%しかし，ブロックサイズを大きくすると，ブロックをP2Pネットワーク上の全ノードに転送して共有する過程により時間がかかってしまう．
-However, when the block size is increased, the process of transferring and sharing blocks to all nodes on P2P network takes time.
-%従って，平均ブロック生成時間を10分より長くしないとブロックがP2Pネットワーク全体に行き渡る前に別のブロックが生成される確率が上がる．
-Therefore, if the average block generation time is not longer than 10 minutes, the probability that another block is generated before the block is distributed throughout the P2P network increases.
-%従って，単純にブロックサイズを大きくしてもBCの分岐を引き起こすことになる．
-Therefore, the bifurcation of BC is caused even if the block size is simply increased.
-%分岐が起こるとProof of Work (PoW)を行ってブロックを生成するノードのハッシュレートが二種類のブロックの生成に分断されてしまう．
-When a branch occurs, the hash rate of a node which generates a block by Proof of Work (PoW) is divided into two types of block generation.
-%これは将来的に排除されてしまうブロックの生成に大量のハッシュパワーをかけてしまうことを意味し，ネットワーク全体のブロック生成効率も下がる．
-This means that a large amount of hash power is applied to the generation of blocks which will be eliminated in the future, and the block generation efficiency of the whole network also decreases.
-%平均ブロック生成時間を10分よりも短くしても，同じくBCの分岐が起こりやすくなり，同様の困難が生じる．
-Even if the average block generation time is shorter than 10 minutes, the bifurcation of BC is also likely to occur, and the same difficulty occurs.
-%これらの理由により，単位時間あたりの取引処理性能を向上することには技術的な困難がある．
-For these reasons, there are technical difficulties in improving transaction processing performance per unit time.
-%この技術的な課題のことをスケーラビリティ問題と呼ぶ．
-This technical problem is called a scalability problem.
+The block size limit of BTC is 1 MB, and blocks larger than this are rejected by miners. 
+The average block generation time interval for BTC is controlled to ten minutes by a difficulty adjustment algorithm. 
+Therefore, the system can only approve transactions that can be recorded in a block of 1 MB at maximum every ten minutes on average. 
+This means that transaction processing capacity is about 7 Transactions Per Second (TPS) at maximum, which is much slower than 56,000 TPS of VISA credit cards. 
+To speed up the transaction processing capacity of a BC system, one might think it becomes better to simply increase the upper limit of block size or shorten the average block generation time interval. 
+However, the larger the block size, the more time it takes to transfer and share the block to all nodes on the P2P network. 
+Therefore, another block is easily generated before the previously generated block is distributed to the whole P2P network, and the probability that the BC is split increases. 
+When the BC is split, the hash rate of nodes that drives block generation is fragmented and its security is degrated. 
+The same problem occurs even if the average block generation time is shorter than 10 minutes. 
+For these reasons, there are technical difficulties in improving the transaction processing capacity, which is called blockchain scalability problem.
 
 
-%ビットコインのスケーラビリティ問題を解決する方法も様々なものが提案されている
-There are many ways to solve the scalability problem of bitcoin\cite{ZHZB2020,Fujihara2018,Fujihara2019,Fujihara2020,YF2021a,YF2021b}．
-%その中でもLightning network\cite{PD2016}のように，BC外で多量の取引をまとめて実行し，その最終結果のみをBCに書き込むことで，ブロックに取り込む取引量を減らす手法に注目が集まっている．
-Among them, a technique like Lightning network \cite{PD2016}, in which a large amount of transactions are executed outside BC in a lump, and only the final result is written in BC, and the amount of transactions taken into a block is reduced, attracts attention.
-%この手法はBC外の仕組みを駆使してスケーラビリティ問題を回避することから，Off-chainのスケーリング技術と呼ばれる．
-This technique is called off-chain scaling technique because it avoids the scalability problem by utilizing the mechanism outside BC.
-%Off-chain技術は一見良いように見えるが，個々の取引処理がBCに残らない．
+Various research proposals have been made to solve the scalability problem \cite{ZHZB2020} and we are also engaged in it with some previous works \cite{Fujihara2018,Fujihara2019,Fujihara2020,YF2021a,YF2021b}．
+Among them, a technique like Lightning network \cite{PD2016}, in which a large amount of transactions are executed outside BC, and only the final result is written in BC at once, is attracting attention to reduce the amount of transactions to approve. 
+This called off-chain scaling technique because it avoids the scalability problem by utilizing a system outside BC. 
 Off-chain technology looks good, but individual transaction processing does not remain in BC.
-%従って，Off-chainで処理した取引の改ざんが可能になってくる．
-Therefore, it becomes possible to falsify transactions processed by off-chain.
 
 
 %またビットコインは，ダークネット・マーケットにおける違法な取引を行う手段として利用されてきた歴史がある．
