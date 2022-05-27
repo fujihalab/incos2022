@@ -185,12 +185,9 @@ Therefore, it is expected that the latency time distribution for a transaction t
 \section{Bitcoin SV Scaling Test Network}
 \label{sec:stn}
 
-%ビットコインのスケーラビリティ問題をOn-chain技術で解決する為の実験場として，BSVはRegTest, Testnet以外の第3のテストネットとしてSTNを立ち上げた．
-BSV started STN as a third test net except RegTest and Testnet to solve the scalability problem of bitcoin by the On-chain technology.
-%Testnetでは取引数が少ない為，ブロックサイズは小さい傾向にあるが，STNでは巨大ブロックを作るために大量の取引が定期的に送信されている．
-In testnet, the block size tends to be small because the number of transactions is small, but in STN, a large number of transactions are sent periodically to make a huge block.
-%STNの未確認（=BCに取り込まれていない）取引件数の時間変化を図\ref{fig:unconfirmed_tx}に示す．
-Figure \ref{fig:unconfirmed_tx} shows the time evolution of the number of unconfirmed transactions in the STN.
+As an experiment field of the scalability, BSV started STN as a third test network after RegTest and Testnet. 
+In testnet, the block size tends to be small because the number of transactions is small, but in STN, a large number of transactions are constantly sent from multiple nodes to make a huge block. 
+Figure \ref{fig:unconfirmed_tx} shows a trend of the number of unconfirmed transactions in the STN. 
 %
 \begin{figure}[t]
   \vspace{-35mm}
@@ -199,42 +196,23 @@ Figure \ref{fig:unconfirmed_tx} shows the time evolution of the number of unconf
   \end{center}
   \vspace{35mm}
   %\caption{STNの未確認取引件数の時間変化}
-  \caption{Trend of Unconfirmed Transactions in STN.}
+  \caption{Trend of unconfirmed transactions in STN.}
   \label{fig:unconfirmed_tx}
   %  \ecaption{english caption is here}
 \end{figure}
 %
+We collected the number of unconfirmed transactions periodically from the BSV blockchain explorer named whatsonchain\cite{woc}.
+Figure \ref{fig:unconfirmed_tx} shows that there are regularly more than 1 million transactions in the transaction pool. 
+We can also see that the number of transactions sometimes reaches more than 10 million.
 
 
-%この図を作成する元となったデータはwhatsonchain\cite{woc}で報告されているものを収集して利用している．
-The data from which this figure is derived are collected and used from whatsonchain\cite{woc}.
-%図\ref{fig:unconfirmed_tx}より，定常的に1,000,000以上の取引がTransaction poolに存在していることが分かる．
-Figure \ref{fig:unconfirmed_tx} shows that there are regularly more than 1 million transactions in the Transaction pool. 
-%また時々，取引数が10,000,000以上に達することも分かる．
-It is also found that the number of transactions sometimes reaches more than 10 million.
-%BSVではOP\_RETURNスクリプトの利用をサポートしているが，取引内容の大半は単純にアドレス間の送金になっている．
-BSV supports the use of OP\_RETURN scripts, but most transactions are simply transfers between addresses.
-
-
-%STNのネットワークは一般に公開されており，誰でもノードを構築してP2Pネットワークに参加することができる．
-The network of STN is open to the public, and anyone can construct a node and participate in P2P network.
-%ただしノード構築の為のシステム要求として，CPUは8〜16コア，メモリは64GB(+64GB Swap)，ハードディスクは3TB以上，インターネット接続は上り下りとも1Gbit以上の性能が要求されている．
+The network of STN is open to the public, and anyone can participate in the network. 
 However, as system requirements for node construction, performance of 8--16 cores for CPU, 64 GB (+64 GB Swap) for memory, over 3 TB for hard disk, and over 1 Gbit for both up and down Internet connection are required.
-%BCの総容量は2021年2月9日時点で2.4TBとなっている．
-The total size of BC was 2.4 TB at that time in February 9, 2021.
-%BSVのTestnetでは22GB，Mainnetでも284GB程度である為，比較するとBCの容量が非常に大きいことが分かる．
-Since it is about 22 GB in Testnet of BSV and 284 GB in Mainnet, it is proven that the capacity of BC is very large in comparison.
-%またSTNのBCのブロック高は2021年2月9日時点で15,216となっており，小さい．これは過去にBCの再編成（=ブロック高を下げて再開）を何度か実施している為である．
+The total size of BC was as huge as 2.4 TB at that time in February 9, 2021, while it was about 22 GB in Testnet and 284 GB in Mainnet. 
 And, the block height of BC of STN became 15,216 as of February 9, 2021, and it is small, which is because BC has been reorganized several times in the past.
-%BSVのgithubの情報では2020年4月と11月にBCの再編成が行われたことが記録されている．
-Information on the github of the BSV records that BC was reorganized in April and November 2020. 
 
-
-
-%またシステム要求からも分かるが，STNはCPUによるブロック採掘が可能になっている．
-%ブロック採掘の難易度の時間変化を図\ref{fig:difficulty}に示す．
-And, block mining by CPU becomes possible in STN, as it is proven from the system requirement.
-The time course of block mining difficulty is shown in Fig.~\ref{fig:difficulty}.
+CPU mining is possible in STN since the difficulty varies from one to several tens.
+The block mining difficulty over time is shown in Fig.~\ref{fig:difficulty}.
 %
 \begin{figure}[t]
   \vspace{-35mm}
@@ -248,17 +226,9 @@ The time course of block mining difficulty is shown in Fig.~\ref{fig:difficulty}
   %  \ecaption{english caption is here}
 \end{figure}
 %
-%難易度は1〜数十の範囲で変化しており，容易に採掘が可能となっている．
-The degree of difficulty varies from one to several tens, making mining easy.
 
-
-
-%STNでは最大ブロックサイズが10GBになるように設定することが推奨されている．
-It is recommended that STNs be configured with a maximum block size of 10 GB.
-%またBitcoin scriptが使用可能なメモリの上限も2GBに設定することが推奨されている．
-It is also recommended that Bitcoin scripts be limited to 2GB of memory.
-%これまでに採掘されたブロックのサイズ分布を調べた結果を図\ref{fig:block_size}に示す．
-Figures \ref{fig:block_size} show the results of examining the size distribution of blocks mined so far.
+It is recommended that STNs be configured with a maximum block size of 10 GB and the number of Bitcoin scripts allowable in a transaction is limited to 2GB of memory.
+Figures \ref{fig:block_size} show the size distribution of blocks mined so far. 
 %
 \begin{figure}[t]
   \vspace{-35mm}
@@ -267,30 +237,20 @@ Figures \ref{fig:block_size} show the results of examining the size distribution
     \includegraphics[width=70mm]{bsv_mainnet-block_bytes-loglog.eps}
   \end{center}
   \vspace{35mm}
-  %\caption{Bitcoin SVにおけるブロックサイズ分布（上図はSTN，下図はMainnet）}
   \caption{Block Size Distribution in Bitcoin SV (Above is STN, below is Mainnet).}
   \label{fig:block_size}
   %  \ecaption{english caption is here}
 \end{figure}
 %
-%STNのブロックサイズ分布は指数分布に従っているように見える．
 The block size distribution of STN seems to follow an exponential distribution.
-%またこれまでに採掘された最大ブロックサイズは2.9GBになっている．
 The largest block size ever mined was 2.9 GB.
-%一方，図\ref{fig:block_size}の下図はMainnetでのブロックサイズ分布になるが，興味深いことに指数分布よりも冪分布に従っているように見える．
 On the other hand, the figure below in Figs.~\ref{fig:block_size} shows the block size distribution in Mainnet, which interestingly seems to follow a power distribution rather than an exponential distribution.
-%また冪指数の傾向からPareto-Zipf則（=冪指数2の冪分布）に従っているようにも見える．
-It also seems to follow the Pareto-Zipf law (= the power-law distribution of the exponent 2) from the tendency of power exponent. 
-%STNのコインには市場価値はないが，Mainnetでは市場価値を持つ．
-STN coins have no market value, but Mainnet has a market value.
-%分布にこのような差が生まれる理由については，よく分かっていないが，市場価値を持つコインが入手できる場合，何らかの経済原理が働くことが影響していると考えられる．
-Though the reason of such difference in the distribution is not well understood, it seems to be influenced by some economic principle when coins with market value are available.
+It also seems to obey the Pareto-Zipf law (= the power-law distribution with a power exponent 2). 
+This difference in both the distributions might come from the fact that Bitcoin in Mainnet has a market value and that in STN does not, but the reason why the difference exists is not well understood. 
 
 
-%BSVは採掘者の評判を評価する観点から採掘したブロックに採掘者IDを記録することを推奨している．
 The BSV recommends recording the miner ID on the blocks mined to assess the reputation of the miner.
-%この採掘者IDを参考にしてブロック採掘頻度のランキングを計算した結果を図\ref{fig:minerrank}に示す．
-Figures \ref{fig:minerrank_stn} and \ref{fig:minerrank_mainnet} show the results of calculating the ranking of block mining frequency with reference to this miner ID.
+Figures \ref{fig:minerrank_stn} and \ref{fig:minerrank_mainnet} show the results of calculating the ranking of block mining frequency with reference to the miner ID.
 %
 \begin{figure}[t]
   \vspace{-35mm}
@@ -298,7 +258,6 @@ Figures \ref{fig:minerrank_stn} and \ref{fig:minerrank_mainnet} show the results
     \includegraphics[width=70mm]{bsv_stn-block_miners-ranking-loglog.eps}
   \end{center}
   \vspace{35mm}
-  %\caption{採掘者IDを参考にして計算したブロック採掘頻度ランキング（STN）}
   \caption{Block mining frequency ranking calculated with reference to miner ID (STN)}
   \label{fig:minerrank_stn}
   %  \ecaption{english caption is here}
@@ -311,14 +270,12 @@ Figures \ref{fig:minerrank_stn} and \ref{fig:minerrank_mainnet} show the results
     \includegraphics[width=70mm]{bsv_mainnet-block_miners-ranking-loglog.eps}
   \end{center}
   %\vspace{35mm}
-  %\caption{採掘者IDを参考にして計算したブロック採掘頻度ランキング（Mainnet）}
   \caption{Block Mining Frequency Ranking Calculated Based on Miner ID (Mainnet)}
   \label{fig:minerrank_mainnet}
   %  \ecaption{english caption is here}
 \end{figure}
 %
-%こちらはSTNとMainnetの両方とも冪分布に従っていることが確認できる．
-Both STN and Mainnet seem to follow a power-law distribution.
+The block mining frequency is both STN and Mainnet seem to follow a power-law distribution.
 
 
 
