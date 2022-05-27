@@ -138,58 +138,47 @@ The contribution of this paper is summarized below:
 \section{Related Works}
 \label{sec:rworks}
 
-\subsection{Calculation of BC split probability}
+\subsection{Calculation of BC Split Probability}
 \label{sec:fork}
 
-%ビットコインのブロック生成時間は指数分布に従うことが知られている．
 It is known that the block generation time interval of Bitcoin follows an exponential distribution. 
 %
 \begin{equation}
-	F(t) = P(T \le t) = \int_{0}^{t} \lambda e^{-\lambda t'} dt' = 1 - e^{-\lambda t}. \label{eq:exp}
+	F(t) = P(T \le t) = \int_{0}^{t} \lambda e^{-\lambda t'} dt' = 1 - e^{-\lambda t}, \label{eq:exp}
 \end{equation}
 where the parameter $\lambda$ is the inverse of the average block generation time.
 For Bitcoin, the average block creation time is $1 / \lambda = 10$ minutes $= 600$ seconds.
 
 
-%またBTCのP2Pネットワークの90\%のノードにブロックが拡散されるまでにかかる時間は，Compact Block Relayを適用する以前の場合で$t = \tau_{fork} \fallingdotseq 12$ 秒であることが実測されている\cite{bloX}．
-In addition, the time it takes for a block to spread to 90\% of the nodes in the P2P network of BTC is measured as $t = \tau_{fork} \fallingdotseq 12$ seconds before Compact Block Relay is applied. 
-%あるブロックがネットワーク全体に拡散される前に，別のブロックが生成された時にBCが分岐してしまう．
-Before a block is spread over the whole network, BC branches when another block is generated.
-%従って，ビットコインのBCが分岐する確率は以下のように計算できる．
-Therefore, the probability of the bifurcation of the Bitcoin BC can be calculated as follows.
+The average latency time for a block to spread to 90\% of all the nodes in the P2P network of BTC is experimentally measured as $t = \tau_{fork} \fallingdotseq 12$ seconds before Compact Block Relay is applied \cite{bloX}. 
+If another block is generated before the block is spread over the whole network, BC becomes split. 
+Therefore, the BC split probability of BTC can be calculated as 2\% as follows.
 %
 \begin{equation}
   F(\tau_{fork}) = P(T \le \tau_{fork}) = 1 - e^{-\lambda \tau_{fork}} \fallingdotseq \lambda \tau_{fork} = 12/600 = 0.02. 
 \end{equation}
 %
-%以上より，BTCのBCの分岐確率は約2\%であることが導かれる．
-It is shown that the bifurcation probability of BTC is about 2\%.
 
 
 
 \subsection{Theory of Priority Queuing}
 \label{sec:priorityqueue}
 
-%優先権の高い客に対して先にサービスを行う優先権付き待ち行列において，稼働率$0 < \rho \le 1$の時，優先権の低い客の待ち時間が冪指数$3/2$の冪分布に従い，その裾野が指数分布のカットオフを持つことが理論解析の結果から知られている
-It is known from the results of theoretical analysis that when the utilization rate is $0 < \rho \le1 $, the waiting time of low priority customers follows a power distribution with a power exponent of $3/2$, and its base has a cutoff of the exponential distribution\cite{OB2005}．
+Consider a queue with priority that serves customers with high priority first. 
+It is known from the analysis of priority queueing that when the occupancy rate is $0 < \rho \le1 $, the latency time of low priority customers follows a power distribution with a power exponent of $3/2$, and the tail of the distribution also has an exponential cutoff\cite{OB2005}. 
 %
 \begin{eqnarray}
   P(\tau) &=& \frac{A}{\tau^{3/2}} \exp(-\tau/\tau_0), \\
   \tau_0  &=& \frac{1}{\mu (1-\sqrt{\rho})^2}, \\
-  \rho    &=& \lambda / \mu.
+  \rho    &=& \lambda / \mu,
 \end{eqnarray}
 %
-%ただし，$A$は確率分布の規格化定数，$\lambda$は客の平均到着率，$\mu$は平均サービス率である．
 where $A$ is the normalized constant of the probability distribution, $\lambda$ is the average arrival rate of customers, and $\mu$ is the average service rate.
-%また稼働率が超臨界状態$\rho > 1$をとる時も同じ冪分布に従うことが報告されている．
-It has also been reported that the same power distribution is followed when the utilization rate takes the supercritical state $\rho > 1$. 
-%$0 < \rho \le 1$の場合と異なる点は，$1-1/\rho$の割合で待ち時間が無限，つまりサービスを永遠に受けることができない客が現れる．
-The difference from the case of $0 < \rho \le1 $is that at a rate of $1 -1 / \rho $, customers will be unable to wait for an infinite amount of time, that is, forever.
+It has also been reported that the same power distribution is followed when the occupancy rate takes the supercritical state, \textit{i.e.}, $\rho > 1$. 
+The difference from the case of $0 < \rho \le 1$ is that at a rate of $1 -1 / \rho $, lower priority customers cannot receive the service forever. 
 
-%ビットコインにおける取引がBCに取り込まれるまでにかかる時間は取引手数料に依存した優先権付き待ち行列理論で説明できることが先行研究によって分かっている\cite{KK2019}．
-Previous research\cite{KK2019} has shown that the time it takes for transactions in bitcoin to be imported into BC can be explained by a preferential queueing theory that relies on transaction fees.
-%このことから，BSV STNにおいても取引がBCに取り込まれるまでにかかる時間分布も同様の性質を持つことが期待される．
-From this fact, it is expected that the time distribution for the transaction to be taken into BC in BSV STN has the same property.
+Previous research\cite{KK2019} has shown that the latency time for a transaction to be approved in BTC can be explained by the theory of priority queueing where the priority is determined by its transaction fee.
+Therefore, it is expected that the latency time distribution for a transaction to be approved in BSV STN is followed by the theory of priority queueing as well. 
 
 
 
@@ -453,7 +442,7 @@ On the other hand, it can be confirmed that there are some transactions which ar
 %実験期間中に合計6,828取引を送信したが，そのうち104取引はBCに取り込まれなかった．
 A total of 6,828 transactions were sent during the experimental period, 104 of which were not incorporated into BC.
 %このことより，取引がBCに取り込まれない確率が$(104/6828 \fallingdotseq) 0.02$と計算できる．
-From this, the probability that the transaction does not get into BC can be calculated as $(104/6828 fallingdotseq) 0.02$.
+From this, the probability that the transaction does not get into BC can be calculated as $(104/6828 \fallingdotseq) 0.02$.
 %この結果は\ref{sec:occupancyrate}節で計算した$1-1/\tilde{\rho} \fallingdotseq 0.0387$の確率でBCに取り込まれない取引が出現していると推定した結果とほぼ同じ値になっていることが確認できる．
 This result is almost the same as the result calculated in Fig.~\ref{sec:occupancyrate} clause, which estimates that there is a probability of $1 -1 / \tilde{\rho} \fallingdotseq 0.0387$ that transactions are not approved. 
 
