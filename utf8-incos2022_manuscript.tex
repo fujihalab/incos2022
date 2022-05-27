@@ -104,54 +104,31 @@ This called off-chain scaling technique because it avoids the scalability proble
 Off-chain technology looks good, but individual transaction processing does not remain in BC.
 
 
-%またビットコインは，ダークネット・マーケットにおける違法な取引を行う手段として利用されてきた歴史がある．
-Bitcoin has a history of being used as a means to conduct illegal transactions on darknet markets.
-%しかし，近年これらのマーケットの支配人や利用者が逮捕される事例が数多く報告されている
-In recent years, however, many cases have been reported in which managers and users of these markets have been arrested \cite{silkroad,alphabay,welcome2video}．
-%これらの逮捕はビットコインが全取引を改ざん耐性を持たせて公開している為に，法的な証拠として利用可能であることに起因する．
-These arrests stem from the fact that bitcoin exposes all transactions in a tamper-proof manner, making them available as legal evidence.
-%この観点から考えると，Off-chain技術が普及するほど，政府等が追跡して監査することが不可能な取引が増えてしまい，ダークネット・マーケットにおける違法な取引の取り締まりが難しくなったり，マネーロンダリングの温床となりうる．
-From this point of view, as off-chain technology spreads, the number of transactions that cannot be tracked and audited by the government increases, making it difficult to control illegal transactions in the darknet market and becoming a hotbed for money laundering.
-%法と倫理とのバランスを考えた時，究極的にはBC上で全取引を処理するOn-chain技術によってスケーラビリティ問題を解決することが求められる．
-Considering the balance between law and ethics, it is required to solve the scalability problem by the On-chain technology which processes all transactions on BC ultimately.
+Bitcoin has a history of being used as an illegal transaction platform in darknet markets.
+In recent years, however, many cases have been reported that managers and users of these markets have been arrested \cite{silkroad,alphabay,welcome2video}．
+These arrests are based on the fact that transactions published on the BC are tamper resistant and are used as legal evidence.
+From this point of view, as the off-chain technology spreads, the number of transactions that cannot be tracked and audited by the government increases, making it difficult to control illegal transactions in the darknet market and becoming a hotbed for money laundering or terrorist financing.
+For this reason, considering the balance with law and ethics, it is ultimately required to solve the scalability problem by the on-chain technology to approve all transactions on BC. 
 
 
-%On-chainでスケーラビリティ問題を解決する為には，BCが分岐しないようにうまく制御しながら平均ブロック生成時間を短くするか，ブロックサイズを大きくする必要がある．
-In order to solve the scalability problem with on-chain, it is necessary to shorten the average block generation time or increase the block size while controlling BC well so that it does not branch.
-%bloXroute\cite{bloX}は，Blockchain Distribution Networkという名称の，より大きなブロックをより短時間で伝搬させることが可能なネットワーク層をP2Pネットワークに接続することで，ブロック伝搬速度を改善しようとする提案である．
-BloXroute\cite{bloX} is a proposal to improve block propagation speed by connecting a network layer which can propagate larger blocks in a shorter time to P2P network named Blockchain Distribution Network.
+In order to solve the scalability problem with on-chain, 
+BloXroute\cite{bloX} introduced the network layer called Blockchain Distribution Network for additionaly connecting to the P2P network to propagete larger blocks in a shorter time. 
+The effort to increase the block size limit is being experimented by Bitcoin SV (BSV) \cite{bsv} Scaling Test Network (STN) \cite{bitcoinscaling}.
+The block size limit of BSV is eliminated, while that of BTC is 1 MB. 
+As of May 27, 2022, the average transaction processing capacity of last 24 hours was reportedly 545 TPS, and the largest block size ever mined was 4 GB. 
 
 
-%ブロックサイズを拡大する取り組みはBitcoin SV (BSV) \cite{bsv} Scaling Test Network (STN)で実験的な取り組みが行われている\cite{bitcoinscaling}．
-The effort to increase the block size is being piloted at Bitcoin SV (BSV) \cite{bsv} Scaling Test Network (STN) \cite{bitcoinscaling}.
-%上述の通り，BTCのブロックサイズの上限は1MBであるのに対し，BSVではブロックサイズの上限を撤廃した．
-As mentioned above, the block size limit of BTC is 1 MB, while the block size limit of BSV is eliminated.
-%これにより2021年2月9日時点で，24時間あたりの平均取引処理数が1,059 Transactions Per Second (TPS)，これまでに採掘された中で最も大きなブロックサイズは2.9GBと報告されている．
-As of February 9, 2021, this led to an average transaction processing rate of 1,059 transactions per second (TPS) per 24 hours, with the largest block size ever mined reported at 2.9 GB.
-
-
-%本研究ではSTNのノードを構築することで，ブロックサイズの上限を撤廃した環境における取引処理に関するデータ分析や性能評価実験を行った結果について報告する．
-This paper reports the results of data analysis and performance evaluation experiments on transaction processing in an environment where the upper limit of block size is eliminated by constructing STN nodes.
-%本研究の貢献を以下に示す．
-The contribution of this research is shown below.
+This paper reports some experimental results of data analysis and performance evaluation on transaction processing in STN. 
+The contribution of this paper is summarized below: 
 %
 \begin{itemize}
-  \item %待ち行列理論を用いることで取引処理の稼働率の時間変化を調べた．
-	Using the queueing theory, we investigate the time variation of the transaction processing utilization.
-	%その結果，推定稼働率は殆どの時間帯で1を超えていることが分かった．
-	As the result, it was proven that the estimated working rate exceeded 1 in most time zones.
-  \item %bitcoin-cliの機能を用いることで，BCの分岐確率の推定を行った．
-	Using the function of bitcoin-cli, we estimate the bifurcation probability of BC.
-	%その結果，BTCでは分岐確率が約2\%であることが計算されているが，BSV STNでは約8.5\%に増加していることが分かった．
-	The results show that the bifurcation probability is calculated to be about 2\% for BTC, but increases to about 8.5\% for BSV STN.
-	%このことから，P2Pネットワークのノード全体にブロックを転送する時間は約53秒となることも計算により推定できた．
-	From this fact, it was also able to estimate by the calculation that the time for transferring the block to the whole node of the P2P network is about 53 seconds.
-  \item %OP\_RETURNスクリプトを含む取引を1分に1回の高頻度で転送した時にBCに取り込まれるまでにかかる時間を実測した．
-	We measured the time it takes for transactions containing the OP \_ RETURN script to be incorporated into BC when they are transferred at a high frequency of once a minute.
-	%その結果，取引がBCに取り込まれる確率は98\%であり，その時間分布は冪分布に従うような傾向が確認できた．
-	As a result, the probability that transactions are incorporated into BC is 98\%, and the time distribution tends to follow the power distribution.
-	%また優先権付き待ち行列の理論と矛盾しない3/2の冪指数に従う傾向も確認できた．
-	We also confirmed the tendency to follow a power exponent of 3/2, which is consistent with the theory of priority queueing.
+  \item Using the queueing theory, we investigate the time variation of occupancy rate on transaction processing. 
+	As the result, we show that the estimated occupancy rate exceeded 1 during most of the time. 
+  \item Using the function of bitcoin-cli, we estimate the BC split probability. 
+	The result shows that the split probability for BTC is theoretically calculated as 2\%, while that for BSV STN is experimentally estimated as about 8.5\%.
+	Using this result, it was also confirmed that the average block propagetion time for BSV STN is calculated to be about 53 seconds. 
+  \item We also experimentally measured the latency time until transactions containing OP\_RETURN script is approved to taken into BC by sending transactions frequently as well as once per minute on average. 
+	As a result, the probability that a transaction is taken into BC is 98\%, and the latency time distribution tends to follow a power distribution with exponent 3/2, which is consistent with the theory of priority queueing. 
 \end{itemize}
 %
 
@@ -165,16 +142,13 @@ The contribution of this research is shown below.
 \label{sec:fork}
 
 %ビットコインのブロック生成時間は指数分布に従うことが知られている．
-It is known that the block generation time of bitcoin follows an exponential distribution.
+It is known that the block generation time interval of Bitcoin follows an exponential distribution. 
 %
 \begin{equation}
 	F(t) = P(T \le t) = \int_{0}^{t} \lambda e^{-\lambda t'} dt' = 1 - e^{-\lambda t}. \label{eq:exp}
 \end{equation}
-%
-%ここでパラメータ$\lambda$は平均ブロック生成時間の逆数である．
-where the parameter $ \lambda $is the inverse of the average block creation time.
-%ビットコインの場合，平均ブロック生成時間は$1/\lambda=10$分$=600$秒と決まっている．
-For bitcoin, the average block creation time is $1 / \lambda = 10$ minutes $= 600$ seconds.
+where the parameter $\lambda$ is the inverse of the average block generation time.
+For Bitcoin, the average block creation time is $1 / \lambda = 10$ minutes $= 600$ seconds.
 
 
 %またBTCのP2Pネットワークの90\%のノードにブロックが拡散されるまでにかかる時間は，Compact Block Relayを適用する以前の場合で$t = \tau_{fork} \fallingdotseq 12$ 秒であることが実測されている\cite{bloX}．
