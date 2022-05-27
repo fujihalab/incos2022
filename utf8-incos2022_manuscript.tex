@@ -72,7 +72,7 @@ From the above, the consideration by the queueing theory with priority seems to 
 The origin of blockchain is a theoretical study on distributed timestamp services for electronic documents by Haber and Stornetta in the early 1990s
 \cite{HS1991,BHS1993,HS1997}.
 At that time, the Internet was insufficiently developed, and it was difficult to use the proposed system in a real environment.
-However, the real environment was prepared by the time that Bitcoin \cite{nakamoto} appeared in 2008, and the operation of the peer-to-peer eletronic cash system started on January 3, 2009.
+However, the real environment was prepared by the time that Bitcoin \cite{nakamoto} appeared in 2008, and the operation of the peer-to-peer electronic cash system started on January 3, 2009.
 Since then, the system has never stopped working. 
 As a result of this achievement by Bitcoin, the word ``Blockchain'' (Hereinafter abbreviated as BC) was born and it has attracted attention though it is essentially the same technology as the distributed time stamp services.
 Therefore, the new idea created by Bitcoin was not BC, but Nakamoto Consensus (仲基合意), where an unspecified number of nodes participating in the network form a consensus on BC. 
@@ -93,7 +93,7 @@ This means that transaction processing capacity is about 7 Transactions Per Seco
 To speed up the transaction processing capacity of a BC system, one might think it becomes better to simply increase the upper limit of block size or shorten the average block generation time interval. 
 However, the larger the block size, the more time it takes to transfer and share the block to all nodes on the P2P network. 
 Therefore, another block is easily generated before the previously generated block is distributed to the whole P2P network, and the probability that the BC is split increases. 
-When the BC is split, the hash rate of nodes that drives block generation is fragmented and its security is degrated. 
+When the BC is split, the hash rate of nodes that drives block generation is fragmented and its security is degraded. 
 The same problem occurs even if the average block generation time is shorter than 10 minutes. 
 For these reasons, there are technical difficulties in improving the transaction processing capacity, which is called blockchain scalability problem.
 
@@ -112,7 +112,7 @@ For this reason, considering the balance with law and ethics, it is ultimately r
 
 
 In order to solve the scalability problem with on-chain, 
-BloXroute\cite{bloX} introduced the network layer called Blockchain Distribution Network for additionaly connecting to the P2P network to propagete larger blocks in a shorter time. 
+BloXroute\cite{bloX} introduced the network layer called Blockchain Distribution Network for additionally connecting to the P2P network to propagate larger blocks in a shorter time. 
 The effort to increase the block size limit is being experimented by Bitcoin SV (BSV) \cite{bsv} Scaling Test Network (STN) \cite{bitcoinscaling}.
 The block size limit of BSV is eliminated, while that of BTC is 1 MB. 
 As of May 27, 2022, the average transaction processing capacity of last 24 hours was reportedly 545 TPS, and the largest block size ever mined was 4 GB. 
@@ -126,7 +126,7 @@ The contribution of this paper is summarized below:
 	As the result, we show that the estimated occupancy rate exceeded 1 during most of the time. 
   \item Using the function of bitcoin-cli, we estimate the BC split probability. 
 	The result shows that the split probability for BTC is theoretically calculated as 2\%, while that for BSV STN is experimentally estimated as about 8.5\%.
-	Using this result, it was also confirmed that the average block propagetion time for BSV STN is calculated to be about 53 seconds. 
+	Using this result, it was also confirmed that the average block propagation time for BSV STN is calculated to be about 53 seconds. 
   \item We also experimentally measured the latency time until transactions containing OP\_RETURN script is approved to taken into BC by sending transactions frequently as well as once per minute on average. 
 	As a result, the probability that a transaction is taken into BC is 98\%, and the latency time distribution tends to follow a power distribution with exponent 3/2, which is consistent with the theory of priority queueing. 
 \end{itemize}
@@ -358,7 +358,7 @@ And, when $F(t) = 0.085$ and $\lambda = 1/600$ are substituted in the expression
 \label{sec:method}
 
 %常に沢山の取引がTransaction poolにある状況で，取引がBCに取り込まれるまでにどの程度の時間がかかるかを実験により性能評価した．
-In this paper, we experimentally evaluate how long it takes for transactions to be incorporated into BC in the situation that there are always many transactions in the transaction pool.a
+In this paper, we experimentally evaluate how long it takes for transactions to be incorporated into BC in the situation that there are always many transactions in the transaction pool.
 %実験期間を2021年1月7〜14日の1週間に設定し，期間中に分岐による取引送信ができない場合を除いて常に1分に1回の頻度で，前の1分間にFlightradar24 \cite{flightradar24} のADS-Bデータの収集ノードから千葉工業大学のある津田沼周辺を飛行する民間航空機の位置情報を収集し，OP\_RETURNスクリプトとしてデータを含めた取引の送信を行った．
 The experimental period was set for 1 week from January 7 to 14, 2021, and the position information of the civil aircraft which flew around Tsudanuma where Chiba Institute of Technology is located was collected from the collection node of ADS-B data of Flightradar 24 \cite{flightradar24} at the frequency of 1 minute always except for the case in which the transaction transmission by the branch is not possible during the period, and the transaction including the data was transmitted as OP\_RETURN script.
 %1取引あたりのサイズは63KB未満になるようにした．
@@ -510,7 +510,7 @@ Number 20K11797.
 \bibitem{BHS1993}
   D. Bayer, S. Haber, and W. S. Stornetta,
   ``Improving the Efficiency and Reliability of Digital Time-Stamping,''
-  Sequences II: Methods in Communication, Security, and Computer Sicence, 
+  Sequences II: Methods in Communication, Security, and Computer Science, 
   pp. 329-334 (1993).
 
 \bibitem{HS1997}
@@ -533,7 +533,7 @@ Number 20K11797.
 % Proof of Work
 \bibitem{DN1993}
   C. Dwork and M. Naor, 
-  ``Pricing via Processing or Combatting Junk Mail,''
+  ``Pricing via Processing or Combating Junk Mail,''
   Advances in Cryptology (CRYPTO'92), 
   Lecture Notes in Computer Science, vol. 740, Springer (1993). 
   %\url{https://web.cs.dal.ca/~abrodsky/7301/readings/DwNa93.pdf}
