@@ -56,14 +56,14 @@
 \maketitle
 
 \abstract{
-The Bitcoin SV Scaling Test Network (STN) is an experimental network for solving the scalability problem of Bitcoin with on-chain technology.
-A large amount of transactions are always transmitted on P2P networks, and experiments are conducted to generate huge blocks.
-In this study, by constructing the STN node, the occupancy rate of transaction processing and the branch probability of the blockchain are estimated. 
-As a result, the estimated occupancy rate was about 1.04 and the estimated branch probability was 8.5\%.
-In addition, the transaction processing performance was experimentally evaluated by transferring transactions including the OP\_RETURN script at a high frequency of once per minute for a period of one week.
-As a result, the probability of the transaction being processed into BC was 98\%.
-It was also confirmed that the latency distribution taken for transactions to be processed in tended to follow a power-law distribution at the tail.
-From the above, the consideration by the queueing theory with priority seems to be effective even in STN.
+Bitcoin SV Scaling Test Network (STN) is an experimental network for testing the scalability of Bitcoin with on-chain technology. 
+A large amount of transactions are always sent to the P2P network, and huge blocks are generated. 
+In this study, by running our STN node, the occupancy rate of transaction processing and the split probability of the blockchain are estimated. 
+As a result, the estimated occupancy rate was about 1.04 and the estimated split probability was 8.5\%.
+In addition, the transaction processing performance was experimentally evaluated by sending transactions including OP\_RETURN script at a high frequency of once per minute during one week.
+As a result, the estimated probability that a transaction was approved was 98\%.
+It was also confirmed that the distribution of latency time until a transaction is approved follows a power-law distribution at the high tail.
+From these results, analysis using the theory with priority queueing is effective even in STN. 
 }
 
 
