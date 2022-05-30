@@ -12,7 +12,7 @@ Webpage: <http://voyager.ce.fit.ac.jp/conf/incos/2022/>
 
 Call for Papers: <http://voyager.ce.fit.ac.jp/conf/incos/2022/cfp.php>
 
-Submission Deadline: May 20, 2022
+Submission Deadline: May 31, 2022
 
 Author Kit: <http://voyager.ce.fit.ac.jp/conf/incos/2022/authorkit.php>
 

@@ -285,10 +285,8 @@ The block mining frequency is both STN and Mainnet seem to follow a power-law di
 \subsection{Experiment 1: Estimating the Occupancy Rate of Approving Transactions in STN}
 \label{sec:occupancyrate}
 
-%図\ref{fig:unconfirmed_tx}における未確認取引件数の時間変化から，STNの稼働率を推定した．
-From the time variation of the number of unconfirmed transactions in Fig.~\ref{fig:unconfirmed_tx}, the operating rate of STN was estimated. 
-%待ち行列理論に基づいて，STNの推定稼働率$\tilde{\rho}$の時間変化を計算した結果を図\ref{fig:occupancyrate}に示す．
-Figure~\ref{fig:occupancyrate} shows the results of calculating the time variation of the estimated STN utilization rate $\tilde{\rho}$ based on queuing theory.
+From the time variation of the number of unconfirmed transactions in Fig.~\ref{fig:unconfirmed_tx}, the occupancy rate of STN was estimated. 
+Figure~\ref{fig:occupancyrate} shows the results of calculating the time variation of the estimated occupancy rate of STN $\tilde{\rho}$ based on queuing theory.
 %
 \begin{figure}[tb]
   \vspace{-35mm}
@@ -296,61 +294,44 @@ Figure~\ref{fig:occupancyrate} shows the results of calculating the time variati
     \includegraphics[width=70mm]{bsv_stn-rho-queue_occupancy_rate.eps}
   \end{center}
   \vspace{35mm}
-  %\caption{STNの推定稼働率$\tilde{\rho}$の時間変化}
   \caption{Time variation of the estimated occupancy rate in STN $\tilde{\rho}$.}
   \label{fig:occupancyrate}
   %  \ecaption{english caption is here}
 \end{figure}
 %
-%推定稼働率は殆どの時間帯で1を超えていることが分かる．
-It can be seen that the estimated occupancy rate exceeds 1 in most time periods. 
-%この結果はBCに取り込まれない取引が存在することを示唆している．
-This result suggests that there are transactions which are not taken into BC. 
-%また2020年11月4日〜2021年2月9日までのデータを用いて推定稼働率の時間平均を取ると$\tilde{\rho} \fallingdotseq 1.04$となった．
-Using data from November 4, 2020 to February 9, 2021, the estimated occupancy rate was calculated as $\tilde{\rho} \fallingdotseq 1.04$. 
-%この結果より，$1-1/\tilde{\rho} \fallingdotseq 0.0387$の確率でBCに取り込まれない取引が出現していると考えられる．
-From these results, it is considered that there is a probability of $1 -1 / \tilde{\rho} \fallingdotseq 0.0387$ that transactions are not included in BC.
+It is observed that the estimated occupancy rate exceeds 1 in most time periods. 
+This result suggests that there are almost always unapproved transactions. 
+Using collected data from November 4, 2020 to February 9, 2021, the estimated occupancy rate was calculated as $\tilde{\rho} \fallingdotseq 1.04$. 
+From these results, it is considered that there is a probability of $1 -1 / \tilde{\rho} \fallingdotseq 0.0387$ that transactions are issued but not approved to be finally recorded in BC. 
+The reason why transactions are not approved seems to be that STN always have a large number of unapproved transactions, but miners tend to approve transactions with high fees. So, if the fee is low, the transaction approval will be delayed and eventually forgotten because of overflows from the memory of transaction pool. 
 
 
 
 \subsection{Experiment 2: Estimating BC Split Probability}
 \label{sec:sork}
 
-%STNのノードを構築してP2Pネットワークに接続すると分かるが，大きなブロックが生成されたと思われるタイミングでBCの大きな分岐が起きてSafe modeとなり，bitcoin-cliコマンドを使って送金ができなくなることがある．
-If you build an STN node and connect it to a P2P network, you will see that when you think a large block has been created, a large branch of BC will occur and it will go into Safe mode and you will not be able to transfer money using the bitcoin-cli command.
-%また一度大きな分岐が起こると解消までに半日近くかかる場合もある．
-Once a large bifurcation occurs, it can take nearly half a day to resolve.
-%そこでbitcoin-cli getinfoのerrorsの値を取得することで分岐が起きている時間から分岐確率を推定する実験を行った．
-We conducted an experiment to estimate the branching probability from the time when the branching occurred by obtaining the errors value of bitcoin-cli getinfo.
+If you run an STN node, you will see that when a large block has been created, a large split of BC will occur and it will go into a safe mode where you will not be able to transfer money using the bitcoin-cli command. 
+Once this large split occurs, it sometimes takes nearly half a day to resolve.
+We conducted an experiment to estimate this BC split probability using warnings when running the command ``bitcoin-cli getinfo''.
 
 
-%2020年11月4日〜2021年1月13日の期間において，10秒に1回の頻度でerrorsの値を収集した（合計594,880回）．
-During the period from November 4, 2020 to January 13, 2021, the errors value was collected once every 10 seconds (594,880 times in total).
-%またBCが分岐している警告が出た回数を数えた．
-We also counted the number of warnings that BC splits.
-%その結果，以下の2種類の警告が出た．
-As the result, following two kinds of warnings were issued.
+During the period from November 4, 2020 to January 13, 2021, the warnings were collected once every 10 seconds. We collected them 594,880 times in total. 
+As the result, we observed two kinds of warnings as follows.
 %
 \begin{itemize}
   \item Warning: The network does not appear to fully agree! We received
         headers of a large fork. Still waiting for block data for more details.
-	%(出現頻度は32,724回, 全体に占める割合は約5.5\%)
-	(The frequency of occurrence was 32,724 times, accounting for approximately 5.5\% in total.)
+	(Occurred 32,724 times, approximately 5.5\% in total.)
 
   \item Warning: The network does not appear to fully agree! Some miners
         appear to be experiencing issues. A large valid fork has been detected. 
-	%(出現頻度は17,782回，全体に占める割合は約3\%)
-	(Occurred 17,782 times, accounting for about 3\% in total.)
+	(Occurred 17,782 times, approximately 3\% in total.)
 \end{itemize}
 %
-%以上の結果より，分岐確率は約$(5.5+3=)8.5$\%と推定することができる．
-From these results, we can estimate the bifurcation probability to be about $(5.5 + 3 =) 8.5$\%.
-%これはBTCの約2\%の4倍超であることが分かる．
-This is about four times larger than the BC-split probability in BTC. 
-%ちなみに同じ手法でBSV Mainnetの分岐確率を評価すると0\%となった．
+From these results, we can estimate the BC split probability to be about $(5.5 + 3 =) 8.5$\%.
+This is about four times larger than the BC split probability in BTC. 
 By the way, when the split probability of BSV Mainnet was evaluated by the same method, it became 0\%.
-%また，式(\ref{eq:exp})において$F(t)=0.085$と$\lambda=1/600$を代入した時，$t=\tau_{fork} \fallingdotseq 53$秒となることから，STNにおける平均ブロック転送時間は約53秒になっていると推定することができる．
-And, when $F(t) = 0.085$ and $\lambda = 1/600$ are substituted in the expression (\ref{eq:exp}), $t = \tau_{fork} \fallingdotseq 53$ seconds, so that the average block transfer time in STN can be estimated to be about 53 seconds.
+If $F(t) = 0.085$ and $\lambda = 1/600$ are substituted in Eq.~(\ref{eq:exp}), then it derives $t = \tau_{fork} \fallingdotseq 53$ seconds, so that the average block propagation time in STN can be estimated to be about 53 seconds. 
 
 
 
@@ -358,17 +339,13 @@ And, when $F(t) = 0.085$ and $\lambda = 1/600$ are substituted in the expression
 \label{sec:method}
 
 %常に沢山の取引がTransaction poolにある状況で，取引がBCに取り込まれるまでにどの程度の時間がかかるかを実験により性能評価した．
-In this paper, we experimentally evaluate how long it takes for transactions to be incorporated into BC in the situation that there are always many transactions in the transaction pool.
+In this paper, we experimentally evaluate how long it takes for transactions to be approved in the situation that there are always many transactions in the transaction pool. 
 %実験期間を2021年1月7〜14日の1週間に設定し，期間中に分岐による取引送信ができない場合を除いて常に1分に1回の頻度で，前の1分間にFlightradar24 \cite{flightradar24} のADS-Bデータの収集ノードから千葉工業大学のある津田沼周辺を飛行する民間航空機の位置情報を収集し，OP\_RETURNスクリプトとしてデータを含めた取引の送信を行った．
-The experimental period was set for 1 week from January 7 to 14, 2021, and the position information of the civil aircraft which flew around Tsudanuma where Chiba Institute of Technology is located was collected from the collection node of ADS-B data of Flightradar 24 \cite{flightradar24} at the frequency of 1 minute always except for the case in which the transaction transmission by the branch is not possible during the period, and the transaction including the data was transmitted as OP\_RETURN script.
+Our experimental period was set for 1 week from January 7 to 14, 2021, and the location information of airplanes which flew around Tsudanuma where Chiba Institute of Technology is located was collected using ADS-B \cite{flightradar24} every one minutes. 
+To do this, we wrote a program to automatically generate transactions including the collected data using OP\_RETURN script to send the P2P network. 
 %1取引あたりのサイズは63KB未満になるようにした．
-The size per transaction should be less than 63 KB.
 %また取引手数料は0.001BSVに固定した．
-The transaction fee was fixed at 0.001 BSV.
-%ちなみにBSVの取引手数料は1 satoshi/byte以上となっている．
-BSV charges more than 1 satoshi/byte.
-%昼間は民間航空機が多く飛行する為，取引データのサイズが大きくなるが，夜間は殆ど飛行がない為，書き込むデータが無かった場合は取引の送信は行わなかった．
-The size of transaction data is large because many commercial aircrafts fly in the daytime, but transactions are not transmitted when there is no data to write, because there is almost no flight at night.
+In the experimental settings, the data size per transaction was less than 63 KB and the transaction fee was fixed at 0.001 BSV. 
 %実験結果に関するその他の詳細情報はGithub に掲載した
 Additional details about the results are available on our Github website 
 \footnote{\url{https://github.com/cit-fujihalab/stn_experiments}}．
@@ -376,7 +353,7 @@ Additional details about the results are available on our Github website
 
 
 %実験期間の経過時間と取引が取り込まれたブロック番号の対応関係を図\ref{fig:exp3-1}に示す．
-Figure~\ref{fig:exp3-1} shows the correspondence between the elapsed time of the experiment period and the block number in which the transaction was captured. 
+Figure~\ref{fig:exp3-1} shows the relation between the elapsed time of the experiment period and the block number in which the transaction was approved. 
 %
 \begin{figure}[tb]
   %\vspace{-35mm}
@@ -385,27 +362,21 @@ Figure~\ref{fig:exp3-1} shows the correspondence between the elapsed time of the
   \end{center}
   %\vspace{35mm}
   %\caption{経過時間と取引が取り込まれたブロック番号の対応関係}
-  \caption{Correspondence between the elapsed time and the block number where the transaction was captured.}
+  \caption{Relation between the elapsed time and the block number where the transaction was approved.}
   \label{fig:exp3-1}
   %  \ecaption{english caption is here}
 \end{figure}
 %
-%経過時間と共に取引が定期的にブロックに取り込まれていることが確認できる．
-You can see that transactions are regularly captured in blocks over time.
-%一方，たまになかなかBCに取り込まれない取引があることも確認できる．
-On the other hand, it can be confirmed that there are some transactions which are seldom taken into BC.
-
-
 %実験期間中に合計6,828取引を送信したが，そのうち104取引はBCに取り込まれなかった．
-A total of 6,828 transactions were sent during the experimental period, 104 of which were not incorporated into BC.
+In total, 6,828 transactions were sent during the experimental period, and 104 of them were not approved and were not recorded in BC. 
 %このことより，取引がBCに取り込まれない確率が$(104/6828 \fallingdotseq) 0.02$と計算できる．
-From this, the probability that the transaction does not get into BC can be calculated as $(104/6828 \fallingdotseq) 0.02$.
+From this, the probability that the transaction is not approved can be calculated as $(104/6828 \fallingdotseq) 0.02$.
 %この結果は\ref{sec:occupancyrate}節で計算した$1-1/\tilde{\rho} \fallingdotseq 0.0387$の確率でBCに取り込まれない取引が出現していると推定した結果とほぼ同じ値になっていることが確認できる．
-This result is almost the same as the result calculated in Fig.~\ref{sec:occupancyrate} clause, which estimates that there is a probability of $1 -1 / \tilde{\rho} \fallingdotseq 0.0387$ that transactions are not approved. 
+This result is almost the same as the result calculated in Fig.~\ref{sec:occupancyrate}. 
 
 
 %次に取引送信からBCに取り込まれるまでにかかる時間のヒストグラムを図\ref{fig:exp3-2}に示す．
-A histogram of the time taken from transaction transmission to incorporation into BC is shown in Fig.~\ref{fig:exp3-2}.
+A histogram of the latency time of the transaction to be approved is shown in Fig.~\ref{fig:exp3-2}.
 %
 \begin{figure}[t]
   %\vspace{-35mm}
@@ -414,26 +385,26 @@ A histogram of the time taken from transaction transmission to incorporation int
   \end{center}
   %\vspace{35mm}
   %\caption{取引送信からBCに取り込まれるまでにかかる時間のヒストグラム}
-  \caption{Histogram of latency time of transaction to be taken into BC.}
+  \caption{Histogram of latency time of transaction to be approved.}
   \label{fig:exp3-2}
   %  \ecaption{english caption is here}
 \end{figure}
 %
 %ブロック生成時間分布が指数分布に従うことから，半日程度の短期間ではBCに取り込まれる時間は指数分布に従うが，1週間程度の長期間になると指数分布から外れてくる．
-Since the block generation time distribution follows the exponential distribution, the time taken into BC follows the exponential distribution in the short term of about half a day, but it deviates from the exponential distribution in the long term of about one week.
+Since the distribution of block generation time interval follows the exponential distribution, the latency time also follows the exponential distribution in the short term which are about half a day, but it deviates from the exponential distribution in the long term which are about one week.
 %実際に図\ref{fig:exp3-2}のとおり両対数プロットで直線的な傾向が現れる為，冪分布に従う傾向が現れていることが確認できる．
-In fact, as shown in Fig.~\ref{fig:exp3-2}, a linear trend appears in the double-logarithmic plot, which confirms that the trend follows the power distribution.
+In fact, as shown in Fig.~\ref{fig:exp3-2}, a linear trend appears in the double-logarithmic plot, which means that it follows the power-law distribution.
 %また冪指数を両対数プロットの傾きから見積もると3/2に近いことが分かる．
-The power index is estimated from the slope of the double-logarithm plot and is close to 3/2.
+The power index can be estimated from the slope of the double-logarithm plot and is close to 3/2.
 %これらの結果は優先権付き待ち行列の理論解析結果と矛盾しない．
 These results are consistent with the theoretical analysis of priority queueing.
 %このことから手数料の低い取引が優先度が低くなり，BCに取り込まれるまでに時間がかかっていることが予想される．
-From this fact, it is anticipated that the transaction with low commission becomes low priority, and that it takes time to be taken into BC.
+This indicates that the transaction with low fee becomes low priority, and it takes more time to be approved than that with high fee. 
 
 
 
 %取引サイズに対する取引手数料の割合と取引がBCに取り込まれるまでにかかった時間の関係を図\ref{fig:exp3-3}に示す．
-Figure \ref{fig:exp3-3} shows the relationship between the ratio of transaction fees to transaction size and the latency time until a transaction is approved. 
+Figure \ref{fig:exp3-3} shows the relation between the fee rate (= the ratio of transaction fee per byte of transaction) and the latency time until the transaction is approved. 
 %
 \begin{figure}[t]
   %\vspace{-35mm}
@@ -442,7 +413,7 @@ Figure \ref{fig:exp3-3} shows the relationship between the ratio of transaction 
   \end{center}
   %\vspace{35mm}
   %\caption{取引サイズに対する取引手数料の割合と取引がBCに取り込まれるまでにかかった時間の関係}
-  \caption{Relationship between the transaction fee as a percentage of transaction size and the time it takes for the transaction to arrive in BC.}
+  \caption{Relation between the fee rate and the latency time until the transaction is approved.}
   \label{fig:exp3-3}
   %  \ecaption{english caption is here}
 \end{figure}
@@ -450,7 +421,7 @@ Figure \ref{fig:exp3-3} shows the relationship between the ratio of transaction 
 %割合(fee rate)が低いとBCに取引が取り込まれるまでに時間がかかっていることが分かる．
 A low fee rate indicates that it is taking a long time for transactions to be incorporated into BC.
 %このことからSTNにおいても優先権付き待ち行列理論による考察は有効であると考えられる．
-Therefore, it is considered that the consideration by the queueing theory with priority is effective even in STN.
+From the above results, we conclude that it is also effective for STN to be analyzed using the theory of priority queueing as well as BTC. 
 
 
 
@@ -458,26 +429,22 @@ Therefore, it is considered that the consideration by the queueing theory with p
 \label{sec:conclusion}
 
 %本研究ではBitcoin STNのノードを構築し，ブロックサイズの上限を撤廃した環境における取引処理に関するデータ分析や性能評価実験を行った．
-In this study, a Bitcoin STN node was constructed, and data analysis and performance evaluation experiment on transaction processing in the environment in which the block size upper limit was removed were carried out.
+In this study, we conducted data analysis and performance evaluation of Bitcoin SV STN where the upper limit of block size is removed. 
 %取引処理の稼働率の時間変化を調べた結果，推定稼働率は殆どの時間帯において1を超えていることが分かった．
-As a result of examining the time variation of the working rate of transaction processing, it was proven that the estimated working rate exceeded 1 in most time zones.
+As a result of examining the time variation of the occupancy rate of transaction processing capacity, we showed that the estimated occupancy rate almost always exceeded one. 
 %bitcoin-cliの機能を用いてBCの分岐確率の推定も行った結果，STNでは約8.5\%となり，BTCの4倍超の確率となっていることが分かった．
-Using bitcoin-cli, we also estimated the branching probability of BC, and found that it is about 8.5\% for STN, which is more than 4 times the probability of BTC.
+Using the command ``bitcoin-cli getinfo'', we estimated the BC split probability. 
+We showed that the probaiblity for STN is about 8.5\%, which is more than 4 times larger than that for BTC.
 %またP2Pネットワークの平均ブロック転送時間も約53秒と推定できた．
-The average block transfer time of the P2P network was also estimated to be about 53 seconds.
+The average block propagation time of the P2P network was also estimated to be about 53 seconds.
 %OP\_RETURNスクリプトを含む取引を1分に1回の高頻度で1週間の期間，転送することで取引処理性能を実験的に評価した．
-The transaction processing performance was experimentally evaluated by transferring transactions containing OP\_RETURN scripts at a high frequency of once a minute for a period of one week.
+The performance of transaction processing was also experimentally evaluated by transferring transactions containing OP\_RETURN scripts at a high frequency of once per minute during one week.
 %その結果，取引がBCに取り込まれる確率は98\%であり，その時間分布は長期的には冪分布に従うような傾向が確認できた．
-As a result, it was found that the probability of transactions being incorporated into BC was 98\%, and its time distribution tended to follow the power distribution in the long term.
+As a result, it was found that the probability of transactions being approved was 98\%, and the latency time follows the power-law distribution in the long term. 
 %また優先権付き待ち行列の理論と矛盾しない3/2の冪指数に従う傾向も確認できた．
-We also confirmed the tendency to follow a power exponent of 3/2, which is consistent with the theory of priority queueing.
+We also confirmed that the power index is about 3/2, which is consistent with the theory of priority queueing.
 %このことからSTNにおいても優先権付き待ち行列理論による考察は有効であると言える．
-From this fact, it can be said that the consideration by the queueing theory with priority is effective even in STN.
-
-
-%今後の課題としては，より大量な数の取引を長期間に渡って送信し続けた時の処理性能について確認することが挙げられる．
-For future work, it is necessary to confirm the processing performance when a larger number of transactions are continuously transmitted over a long period of time.
-
+From these results, we concluded that the theory with priority queueing is effective to analyze STN. 
 
 
 
