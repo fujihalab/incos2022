@@ -9,7 +9,7 @@
 
 % RECOMMENDED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[graybox]{svmult}
-\usepackage[a4paper]{geometry}
+%\usepackage[a4paper]{geometry}
 
 % choose options for [] as required from the list
 % in the Reference Guide
@@ -83,7 +83,7 @@ Although studies on consensus algorithms in distributed systems had been conduct
 A core application of Bitcoin is micropayment where transactions of less than one yen or cent that can be realized by making transaction fees extremely low. 
 Micropayment makes it possible to collect near zero or the level at which people don't care about paying charges from a large number of users when using various services on the Internet. 
 Therefore, Bitcoin has the potential to create new decentralized economic mechanisms that have never existed before.
-However, the current Bitcoin Core (BTC) \cite{btc} is not used for ordinary payments as an electronic cash system, but has become a store-of-value system for speculative purposes. 
+However, the current Bitcoin Core (BTC) \footnote{Bitcoin Core \url{https://github.com/bitcoin/bitcoin}} is not used for ordinary payments as an electronic cash system, but has become a store-of-value system for speculative purposes. 
 Behind this, there is a technical problem that make BTC practically difficult to perform many micropayments. 
 
 
@@ -111,8 +111,8 @@ From this point of view, if the off-chain scaling technology spreads, the number
 For this reason, considering the balance with law and ethics, it is ultimately required to solve the scalability problem by on-chain scaling technology to record all transactions on BC. 
 
 
-To do this, BloXroute\cite{bloX} introduced the network layer called Blockchain Distribution Network for additionally connecting to the P2P network to propagate larger blocks in a shorter time. 
-The effort to increase the block size limit is being experimented by a test network of Bitcoin SV (BSV) \cite{bsv} called Scaling Test Network (STN) \cite{bitcoinscaling}.
+To do this, bloXroute\cite{bloX} introduced the network layer called Blockchain Distribution Network for additionally connecting to the P2P network to propagate larger blocks in a shorter time. 
+The effort to increase the block size limit is being experimented by a test network of Bitcoin SV (BSV) \footnote{Bitcoin SV (Satoshi Vision) \url{https://github.com/bitcoin-sv/bitcoin-sv}} called Scaling Test Network (STN) \footnote{Bitcoin Scaling Test Network \url{https://bitcoinscaling.io/}}.
 The block size limit of BSV is eliminated, and 
 as of May 31, 2022, the average transaction processing capacity of last 24 hours was reportedly 1,809 TPS, and the largest block size ever mined was 4 GB. 
 
@@ -131,6 +131,7 @@ The contribution of this paper is summarized below:
 \end{itemize}
 %
 
+The paper is organized as follows. In Section 2, related works about calculation of BC split probability and theory of priority queueing are introduced. In Section 3, BSV STN is explained. In Section 4, three performance evaluation experiments on estimating the occupancy rate of approving transaction in STN, estimating BC split probability, and testing transaction processing performance are demonstrated. In Section 5, we finally conclude with reviewing our findings. 
 
 
 
@@ -200,7 +201,7 @@ Figure \ref{fig:unconfirmed_tx} shows a trend of the number of unconfirmed trans
   %  \ecaption{english caption is here}
 \end{figure}
 %
-We collected the number of unconfirmed transactions periodically from the BSV BC explorer named whatsonchain\cite{woc}.
+We collected the number of unconfirmed transactions periodically from the BSV BC explorer named whatsonchain \footnote{WhatsOnChain.com, BSV Explorer - STN \url{https://stn.whatsonchain.com/}}.
 Figure \ref{fig:unconfirmed_tx} shows that there are regularly more than one million transactions in the transaction pool. 
 We can also see that the number of transactions sometimes reaches more than 10 million.
 
@@ -338,7 +339,7 @@ If $F(t) = 0.085$ and $\lambda = 1/600$ are substituted in Eq.~(\ref{eq:exp}), t
 \label{sec:method}
 
 In this paper, we experimentally evaluate how long it takes for transactions to be approved in the situation that there are always many transactions in the transaction pool. 
-Our experimental period was set for one week from January 7--14, 2021, and the location information of airplanes which flew around Tsudanuma city where Chiba Institute of Technology is located was collected using ADS-B \cite{flightradar24} every one minutes. 
+Our experimental period was set for one week from January 7--14, 2021, and the location information of airplanes which flew around Tsudanuma city where Chiba Institute of Technology is located was collected using ADS-B \footnote{Flight Tracker | Flightradar24 | Track Planes in Real-time \url{https://www.flightradar24.com/}} every one minutes. 
 To do this, we wrote a node program to automatically generate transactions including the collected data using OP\_RETURN script to send the P2P network. 
 In the experimental settings, the data size per transaction was less than 63 KB and the transaction fee was fixed at 0.001 BSV. 
 Additional details about the results are available on our Github website 
@@ -407,7 +408,7 @@ From the results above, we conclude that it is consistent to analyze STN using t
 In this study, we conducted data analysis and performance evaluation of Bitcoin SV STN where the upper block size limit is removed. 
 As a result of examining the time variation of the occupancy rate of transaction processing capacity, we showed that the estimated occupancy rate almost always exceeded one. 
 Using the command \textit{bitcoin-cli getinfo}, we estimated the BC split probability. 
-We showed that the probaiblity for STN is about 8.5\%, which is more than 4 times larger than that for BTC.
+We showed that the probability for STN is about 8.5\%, which is more than 4 times larger than that for BTC.
 The average block propagation time of the P2P network was also estimated as about 53 seconds.
 The performance of transaction processing was also experimentally evaluated by sending transactions including flight data with OP\_RETURN scripts once per minute during one week.
 As a result, it was found that the probability of transactions being approved was 98\%, and the latency time follows the power-law distribution in the long term. 
@@ -417,22 +418,13 @@ From these results, we concluded that it is consistent to analyze STN using the 
 
 
 \begin{acknowledgement}
- This work was partially supported by the Japan Society for the Promotion of 
-Science (JSPS) through KAKENHI (Grants-in-Aid for Scientific Research) Grant 
-Number 20K11797. 
+ This work was partially supported by the Japan Society for the Promotion of Science (JSPS) through KAKENHI (Grants-in-Aid for Scientific Research) Grant \# 20K11797. 
 \end{acknowledgement}
 
 
 
-%%
-%\section*{Appendix}
-%\addcontentsline{toc}{section}{Appendix}
-%%
-%%
 
-
-
-
+\vspace{-5mm}
 \begin{thebibliography}{99}
 
 % Blockchain
@@ -461,8 +453,8 @@ Number 20K11797.
   S. Nakamoto, 
   ``Bitcoin: A Peer-to-Peer Electronic Cash System''
   (White paper), 2008 
-  \url{https://bitcoin.org/bitcoin.pdf}
-  \url{https://www.bitcoinsv.io/bitcoin.pdf}
+  %\url{https://bitcoin.org/bitcoin.pdf}
+  %\url{https://www.bitcoinsv.io/bitcoin.pdf}
 
 
 % Proof of Work
@@ -483,9 +475,9 @@ Number 20K11797.
   %\url{https://www.arijuels.com/wp-content/uploads/2013/09/PoW.pdf}
 
 
-\bibitem{btc}
-  Bitcoin Core 
-  \url{https://github.com/bitcoin/bitcoin}
+%\bibitem{btc}
+%  Bitcoin Core 
+%  \url{https://github.com/bitcoin/bitcoin}
 
 
 % scalability problem
@@ -501,14 +493,14 @@ Number 20K11797.
   Sharing Incentivized by Blockchain Technology,''
   The 10th International Conference on Intelligent Networking and 
   Collaborative Systems (INCoS-2018), pp.170-182 (2018)
-  \url{https://link.springer.com/chapter/10.1007/978-3-319-98557-2_16}
+  %\url{https://link.springer.com/chapter/10.1007/978-3-319-98557-2_16}
 
 \bibitem{Fujihara2019}
   A. Fujihara，
   ``PoWaP: Proof of Work at Proximity for a crowdsensing system for 
   collaborative traffic information gathering,'' 
   Internet of Things, 100046, Elsevier (2019).
-  \url{https://www.sciencedirect.com/science/article/pii/S254266051830177X}
+  %\url{https://www.sciencedirect.com/science/article/pii/S254266051830177X}
 
 \bibitem{Fujihara2020}
   A. Fujihara, 
@@ -516,7 +508,7 @@ Number 20K11797.
   Advances in Intelligent Networking and Collaborative Systems (INCoS2019), 
   Advances in Intelligent Systems and Computing, 
   Vol. 1035, pp. 190--201, Springer (2020).
-  \url{https://link.springer.com/chapter/10.1007/978-3-030-29035-1_19}
+  %\url{https://link.springer.com/chapter/10.1007/978-3-030-29035-1_19}
 
 \bibitem{YF2021a}
   T. Yanagihara and A. Fujihara, 
@@ -524,19 +516,20 @@ Number 20K11797.
   Advances in Internet, Data and Web Technologies, 
   Lecture Notes on Data Engineering and Communications Technologies, 
   Vol. 65, pp. 220-231, Springer (2021). 
-  \url{https://link.springer.com/chapter/10.1007/978-3-030-70639-5_21}
+  %\url{https://link.springer.com/chapter/10.1007/978-3-030-70639-5_21}
 
 \bibitem{YF2021b}
   T. Yanagihara and A. Fujihara,
   ``Cross-Referencing Method for Scalable Public Blockchain,''
   Internet of Things, Vol. 15, 100419 (2021). 
-  \url{https://www.sciencedirect.com/science/article/pii/S2542660521000639}
+  %\url{https://www.sciencedirect.com/science/article/pii/S2542660521000639}
 
 
 \bibitem{PD2016}
   J. Poon and T. Dryja, 
   ``The Bitcoin Lightning Network: Scalable Off-Chain Instant Payments,'' 
-  (2016) \url{https://lightning.network/lightning-network-paper.pdf}
+  (2016). 
+  %\url{https://lightning.network/lightning-network-paper.pdf}
 
 
 \bibitem{silkroad}
@@ -567,16 +560,16 @@ Number 20K11797.
   U. Klarman, \textit{et al.},
   ``bloXroute: A Scalable Trustless Blockchain Distribution Network''
   (White paper), 2018.
-  \url{https://bloxroute.com/wp-content/uploads/2018/03/bloXroute-whitepaper.pdf}
+  %\url{https://bloxroute.com/wp-content/uploads/2018/03/bloXroute-whitepaper.pdf}
 
 
-\bibitem{bsv}
-  Bitcoin SV (Satoshi Vision) 
-  \url{https://github.com/bitcoin-sv/bitcoin-sv}
+%\bibitem{bsv}
+%  Bitcoin SV (Satoshi Vision) 
+%  \url{https://github.com/bitcoin-sv/bitcoin-sv}
 
-\bibitem{bitcoinscaling}
-  Bitcoin Scaling Test Network
-  \url{https://bitcoinscaling.io/}
+%\bibitem{bitcoinscaling}
+%  Bitcoin Scaling Test Network
+%  \url{https://bitcoinscaling.io/}
 
 
 
@@ -593,16 +586,16 @@ Number 20K11797.
   Journal of Industrial and Management Optimization, 15 (1): 365-386, 2019.
 
 
-\bibitem{woc}
-  WhatsOnChain.com, BSV Explorer - STN,
-  \url{https://stn.whatsonchain.com/}
+%\bibitem{woc}
+%  WhatsOnChain.com, BSV Explorer - STN,
+%  \url{https://stn.whatsonchain.com/}
 
 
 
-% Flightradar24
-\bibitem{flightradar24}
-  Flight Tracker | Flightradar24 | Track Planes in Real-time,
-  \url{https://www.flightradar24.com/}
+%% Flightradar24
+%\bibitem{flightradar24}
+%  Flight Tracker | Flightradar24 | Track Planes in Real-time,
+%  \url{https://www.flightradar24.com/}
 
 
 
